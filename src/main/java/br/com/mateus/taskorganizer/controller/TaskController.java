@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mateus.taskorganizer.model.task.TaskDTO;
 import br.com.mateus.taskorganizer.model.task.TaskService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/organizer/tasks")
+@SecurityRequirement(name = "bearer-key")
 public class TaskController {
 
 	@Autowired
