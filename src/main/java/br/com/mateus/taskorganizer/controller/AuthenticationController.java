@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mateus.taskorganizer.infra.security.TokenService;
-import br.com.mateus.taskorganizer.model.user.DataAuthenticationDTO;
-import br.com.mateus.taskorganizer.model.user.LoginResponseDTO;
-import br.com.mateus.taskorganizer.model.user.RegisterDTO;
 import br.com.mateus.taskorganizer.model.user.User;
 import br.com.mateus.taskorganizer.model.user.UserRepository;
+import br.com.mateus.taskorganizer.model.user.authentication.DataAuthenticationDTO;
+import br.com.mateus.taskorganizer.model.user.authentication.LoginResponseDTO;
+import br.com.mateus.taskorganizer.model.user.authentication.RegisterDTO;
 import jakarta.validation.Valid;
 
 @RestController
