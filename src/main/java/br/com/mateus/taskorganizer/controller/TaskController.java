@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.mateus.taskorganizer.dto.TaskDTO;
-import br.com.mateus.taskorganizer.service.TaskService;
+import br.com.mateus.taskorganizer.model.task.TaskDTO;
+import br.com.mateus.taskorganizer.model.task.TaskService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 

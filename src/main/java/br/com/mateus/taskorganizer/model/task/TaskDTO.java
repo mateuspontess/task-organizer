@@ -1,8 +1,7 @@
-package br.com.mateus.taskorganizer.dto;
+package br.com.mateus.taskorganizer.model.task;
 
 import java.time.LocalDate;
 
-import br.com.mateus.taskorganizer.model.StatusTask;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

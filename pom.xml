@@ -9,11 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.mateus</groupId>
-	<artifactId>organizador-de-terefas</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>organizador-de-terefas</name>
-	<description>O projeto consiste no desenvolvimento de uma API RESTful utilizando o framework Spring Boot para criar um Sistema de Gerenciamento de Tarefas. O sistema permitirá aos usuários realizar operações básicas de cadastro, leitura, atualização e exclusão de tarefas, proporcionando uma solução eficaz para o gerenciamento de atividades.</description>
-	<properties>
+	<artifactId>task-organizer</artifactId>
+	<description>The project consists of developing a RESTful API using the Spring Boot framework to create a Task Management System. The system will allow users to perform basic operations of registering, reading, updating and deleting tasks, providing an effective solution for managing activities.</description>	<properties>
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
@@ -51,6 +48,22 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
       		<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>4.4.0</version>
 		</dependency>
 
 	</dependencies>

@@ -1,14 +1,10 @@
-package br.com.mateus.taskorganizer.service;
+package br.com.mateus.taskorganizer.model.task;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import br.com.mateus.taskorganizer.dto.TaskDTO;
-import br.com.mateus.taskorganizer.model.Task;
-import br.com.mateus.taskorganizer.repository.TaskRepository;
 
 @Service
 public class TaskService {
@@ -26,7 +22,7 @@ public class TaskService {
 	
 	public void updateTask(TaskDTO dto) {
 		Task task = rp.getReferenceById(dto.id());
-		task.atualizaTarefa(dto.title(), dto.description(), dto.dueDate(), dto.status());
+		task.updateTask(dto.title(), dto.description(), dto.dueDate(), dto.status());
 	}
 	
 	public TaskDTO showTask(Long id) {

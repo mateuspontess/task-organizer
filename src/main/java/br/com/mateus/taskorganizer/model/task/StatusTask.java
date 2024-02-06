@@ -1,4 +1,4 @@
-package br.com.mateus.taskorganizer.model;
+package br.com.mateus.taskorganizer.model.task;
 
 public enum StatusTask {
 	IN_PROGRESS,

@@ -1,4 +1,4 @@
-package br.com.mateus.taskorganizer.model;
+package br.com.mateus.taskorganizer.model.task;
 
 import java.time.LocalDate;
 
@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,14 +23,13 @@ import lombok.Setter;
 @EqualsAndHashCode(of = "id")
 public class Task {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(unique = true)
 	private String title;
 	private String description;
 	private LocalDate dueDate;
-	@Setter
 	@Enumerated(EnumType.STRING)
 	private StatusTask status;
 	
@@ -41,7 +39,7 @@ public class Task {
 		this.dueDate = dueDate;
 		this.status = status;
 	}
-	public void atualizaTarefa(String title, String description, LocalDate dueDate, StatusTask status) {
+	public void updateTask(String title, String description, LocalDate dueDate, StatusTask status) {
 		this.title = title;
 		this.description = description;
 		this.dueDate = dueDate;
