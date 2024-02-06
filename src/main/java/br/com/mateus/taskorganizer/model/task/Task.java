@@ -2,6 +2,7 @@ package br.com.mateus.taskorganizer.model.task;
 
 import java.time.LocalDate;
 
+import br.com.mateus.taskorganizer.model.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,13 +10,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity(name = "Task")
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = "id")
 public class Task {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter
 	private Long id;
 	
 	@Column(unique = true)
@@ -33,11 +34,16 @@ public class Task {
 	@Enumerated(EnumType.STRING)
 	private StatusTask status;
 	
-	public Task(String title, String description, LocalDate dueDate, StatusTask status) {
+	@ManyToOne
+	private User user;
+	
+	
+	public Task(String title, String description, LocalDate dueDate, StatusTask status, User user) {
 		this.title = title;
 		this.description = description;
 		this.dueDate = dueDate;
 		this.status = status;
+		this.user = user;
 	}
 	public void updateTask(String title, String description, LocalDate dueDate, StatusTask status) {
 		this.title = title;

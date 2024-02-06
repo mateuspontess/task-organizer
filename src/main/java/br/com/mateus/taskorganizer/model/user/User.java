@@ -1,5 +1,6 @@
 package br.com.mateus.taskorganizer.model.user;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,12 +8,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import br.com.mateus.taskorganizer.model.task.Task;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +34,9 @@ public class User implements UserDetails {
 	private String password;
 	@Enumerated(EnumType.STRING) @Getter
 	private UserRole role;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Task> tasks = new ArrayList<>();
 	
 	public User(String login, String password, UserRole role) {
 		this.login = login;
