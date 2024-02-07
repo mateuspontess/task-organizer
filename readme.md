@@ -1,6 +1,6 @@
 ## 🖥️ About the project
 
-Task Organizer is an application for users to register and organize their personal tasks. The app features functionalities that allow the creation of a user and the management of tasks.
+Task Organizer is a simple CRUD application for users to register and organize their personal tasks.
 
 --- 
 
