@@ -62,25 +62,15 @@ public class AuthenticationController {
 		return ResponseEntity.ok().build();
 	}
 	
-    @PostMapping("/admin/register")
-    public ResponseEntity adminRegister(@RequestBody @Valid RegisterDTO data) throws AccessDeniedException{
-    	if(this.isAdmin()) {
-        	if(this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
-        	
-        	String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        	User newUser = new User(data.login(), encryptedPassword, UserRole.ADMIN);
-        	
-        	this.repository.save(newUser);
-        	
-        	return ResponseEntity.ok().build();
-    	}
-    	throw new AccessDeniedException("Access denied");
-    }
-    
-	private boolean isAdmin() {
-		return SecurityContextHolder.getContext()
-				.getAuthentication()
-				.getAuthorities()
-				.contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+	@PostMapping("/register")
+	public ResponseEntity adminRegister(@RequestBody @Valid RegisterDTO data) {
+		if(this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+		
+		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+		User newUser = new User(data.login(), encryptedPassword, UserRole.ADMIN);
+		
+		repository.save(newUser);
+		
+		return ResponseEntity.ok().build();
 	}
 }
