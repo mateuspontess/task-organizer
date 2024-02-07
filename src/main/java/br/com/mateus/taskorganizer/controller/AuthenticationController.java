@@ -62,7 +62,7 @@ public class AuthenticationController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@PostMapping("/register")
+	@PostMapping("/admin/register")
 	public ResponseEntity adminRegister(@RequestBody @Valid RegisterDTO data) {
 		if(this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
 		
