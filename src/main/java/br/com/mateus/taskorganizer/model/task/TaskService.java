@@ -30,24 +30,23 @@ public class TaskService {
 	}
 	
 	public Task updateTask(TaskRequestDTO dto) throws AccessDeniedException {
-		User user = this.getUser();
 		Task task = taskRepository.getReferenceById(dto.id());
-		this.accesVerify(user, task);
+		this.accesVerify(task);
 		
 		task.updateTask(dto.title(), dto.description(), dto.dueDate(), dto.status());
 		return task;
 	}
 	
 	public TaskResponseDTO showTask(Long id) throws AccessDeniedException {
-		User user = this.getUser();
 		Task task = taskRepository.getReferenceById(id);
-		this.accesVerify(user, task);
+		this.accesVerify(task);
 		
 		return new TaskResponseDTO(task);
 	}
 	
 	public void removeTask(Long taskId) {
-		taskRepository.deleteByUserIdAndId(this.getUser().getId(), taskId);
+		User user = this.getUser();
+		taskRepository.deleteByUserIdAndId(user.getId(), taskId);
 	}
 	
 	
@@ -57,7 +56,8 @@ public class TaskService {
 				.getAuthentication()
 				.getPrincipal();
 	}
-	private void accesVerify(User user, Task task) throws AccessDeniedException {
+	private void accesVerify(Task task) throws AccessDeniedException {
+		User user = this.getUser();
 		if (user == null || !task.getUser().getId().equals(user.getId())) throw new AccessDeniedException("User do not have permission for access this task");
 	}
 }
