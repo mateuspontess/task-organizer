@@ -4,7 +4,7 @@ Task Organizer is a simple CRUD application for users to register and organize t
 
 --- 
 
-## ⚙️ Funcionalidades
+## ⚙️ Functionalities
 - ✅ CRUD for tasks;
 - ✅ User registration;
 
