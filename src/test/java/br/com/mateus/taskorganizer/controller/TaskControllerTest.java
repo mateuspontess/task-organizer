@@ -2,6 +2,7 @@ package br.com.mateus.taskorganizer.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,10 +27,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import br.com.mateus.taskorganizer.model.task.StatusTask;
 import br.com.mateus.taskorganizer.model.task.Task;
-import br.com.mateus.taskorganizer.model.task.TaskRepository;
-import br.com.mateus.taskorganizer.model.task.TaskRequestDTO;
+import br.com.mateus.taskorganizer.model.task.TaskCreateDTO;
 import br.com.mateus.taskorganizer.model.task.TaskResponseDTO;
 import br.com.mateus.taskorganizer.model.task.TaskService;
+import br.com.mateus.taskorganizer.model.task.TaskUpdateDTO;
 import br.com.mateus.taskorganizer.util.TaskBuilder;
 
 @SpringBootTest
@@ -37,10 +38,13 @@ import br.com.mateus.taskorganizer.util.TaskBuilder;
 @AutoConfigureJsonTesters
 public class TaskControllerTest {
 
+	private String contextUrl = "/tasks";
 	@Autowired
 	private MockMvc mvc;
 	@Autowired 
-	private JacksonTester<TaskRequestDTO> taskRequestJson;
+	private JacksonTester<TaskCreateDTO> taskRequestJson;
+	@Autowired 
+	private JacksonTester<TaskUpdateDTO> taskUpdateJson;
 	@Autowired 
 	private JacksonTester<TaskResponseDTO> taskResponseJson;
 	
@@ -56,7 +60,8 @@ public class TaskControllerTest {
 							.dueDate(date)
 							.status(StatusTask.CONCLUDED)
 							.build();
-	private TaskRequestDTO taskRequest = new TaskRequestDTO(1l, "Test-title", "Description-test", date, StatusTask.CONCLUDED);
+	private TaskCreateDTO taskCreate = new TaskCreateDTO("Test-title", "Description-test", date);
+	private TaskUpdateDTO taskUpdate = new TaskUpdateDTO("Test-title", "Description-test", date, StatusTask.CONCLUDED.toString());
 	private TaskResponseDTO taskReponse = new TaskResponseDTO(task);
 	
 	
@@ -64,11 +69,12 @@ public class TaskControllerTest {
 	@DisplayName("Return status code 400 when invalid informations")
 	@WithMockUser
 	void registerTaskTest01() throws Exception {
-		var response = mvc.perform(post(this.contextUrl("/register-task")))
-			.andReturn().getResponse();
+		var response = mvc.perform(post(this.incrementContextUrl("")))
+				.andReturn().getResponse();
 		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
 	}
+	
     @Test
     @DisplayName("Return status code 200 and expetected json")
     @WithMockUser
@@ -77,9 +83,9 @@ public class TaskControllerTest {
 		when(taskService.registerTask(any())).thenReturn(task);
         
     	var response = mvc.perform(MockMvcRequestBuilders
-				.post(this.contextUrl("/register-task"))
+				.post(this.incrementContextUrl(""))
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(taskRequestJson.write(taskRequest)
+				.content(taskRequestJson.write(taskCreate)
 						.getJson())
 			)
 			.andReturn().getResponse();
@@ -93,7 +99,7 @@ public class TaskControllerTest {
 	@DisplayName("Return status code 400 when invalid informations")
 	@WithMockUser
 	void updateTaskTest01() throws Exception {
-		var response = mvc.perform(put(this.contextUrl("/update")))
+		var response = mvc.perform(put(this.incrementContextUrl("/1")))
 			.andReturn().getResponse();
 		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -102,18 +108,17 @@ public class TaskControllerTest {
     @DisplayName("Return status code 200 and expetected json")
     @WithMockUser
 	public void updateTaskTest02() throws IOException, Exception {
-		when(taskService.updateTask(any())).thenReturn(task);
+		when(taskService.updateTask(anyLong(),any())).thenReturn(task);
 		
 		var response = mvc.perform(MockMvcRequestBuilders
-				.put(this.contextUrl("/update"))
+				.put(this.incrementContextUrl("/1"))
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(taskRequestJson.write(taskRequest)
+				.content(taskUpdateJson.write(taskUpdate)
 						.getJson())
 			)
 			.andReturn().getResponse();
 		
 		var expectedJson = taskResponseJson.write(taskReponse).getJson();
-		
 		assertThat(response.getContentAsString()).isEqualTo(expectedJson);
 	}
 	
@@ -121,13 +126,13 @@ public class TaskControllerTest {
 	@DisplayName("Return status code 400 when invalid informations")
 	@WithMockUser
 	void removeTaskTest() throws Exception {
-		var response = mvc.perform(delete(this.contextUrl("/remove/"+1l)))
+		var response = mvc.perform(delete(this.incrementContextUrl("/1")))
 			.andReturn().getResponse();
 		
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
 	}
     
-    public String contextUrl(String url) {
-        return "/organizer/tasks"+url;
+    public String incrementContextUrl(String url) {
+        return this.contextUrl+url;
     }
 }

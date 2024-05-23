@@ -37,7 +37,7 @@ public class TaskBuilder {
 	}
 	
 	public Task build() {
-		Task task =  new Task(this.title, this.description, this.dueDate, this.status, this.user);
+		Task task =  new Task(this.title, this.description, this.dueDate, this.user);
 		task.setId(this.id);
 		return task;
 	}

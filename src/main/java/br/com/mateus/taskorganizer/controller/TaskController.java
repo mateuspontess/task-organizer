@@ -1,6 +1,5 @@
 package br.com.mateus.taskorganizer.controller;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.mateus.taskorganizer.model.task.Task;
-import br.com.mateus.taskorganizer.model.task.TaskRequestDTO;
+import br.com.mateus.taskorganizer.model.task.TaskCreateDTO;
 import br.com.mateus.taskorganizer.model.task.TaskResponseDTO;
 import br.com.mateus.taskorganizer.model.task.TaskService;
+import br.com.mateus.taskorganizer.model.task.TaskUpdateDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/organizer/tasks")
+@RequestMapping("/tasks")
 @SecurityRequirement(name = "bearer-key")
 public class TaskController {
 
@@ -32,34 +32,34 @@ public class TaskController {
 	private TaskService service;
 	
 	
-	@PostMapping("/register-task")
+	@PostMapping
 	@Transactional
-	public ResponseEntity<TaskResponseDTO> registerTask(@RequestBody @Valid TaskRequestDTO dto, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<TaskResponseDTO> registerTask(@RequestBody @Valid TaskCreateDTO dto, UriComponentsBuilder uriBuilder) {
 		Task task = service.registerTask(dto);
 		
-		var uri = uriBuilder.path("/organizer/task/{id}").buildAndExpand(dto).toUri();
+		var uri = uriBuilder.path("/tasks/{id}").buildAndExpand(dto).toUri();
 		
 		return ResponseEntity.created(uri).body(new TaskResponseDTO(task));
 	}
 
-	@GetMapping("/all")
+	@GetMapping
 	public ResponseEntity<List<TaskResponseDTO>> listTasks() {
 		return ResponseEntity.ok(service.listTasks());
 	}
 	
-	@PutMapping("/update")
+	@PutMapping("/{taskId}")
 	@Transactional
-	public ResponseEntity<TaskResponseDTO> updateTask(@RequestBody TaskRequestDTO dto) throws AccessDeniedException {
-		Task task = service.updateTask(dto);
+	public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long taskId, @RequestBody TaskUpdateDTO dto) {
+		Task task = service.updateTask(taskId, dto);
 		return ResponseEntity.ok(new TaskResponseDTO(task));
 	}
 
-	@GetMapping("/task/{id}")
-	public ResponseEntity<TaskResponseDTO> showTask(@PathVariable Long id) throws AccessDeniedException {
+	@GetMapping("/{id}")
+	public ResponseEntity<TaskResponseDTO> showTask(@PathVariable Long id) {
 		return ResponseEntity.ok(service.showTask(id));
 	}
 	
-	@DeleteMapping("/remove/{id}")
+	@DeleteMapping("/{id}")
 	@Transactional
 	public ResponseEntity<TaskResponseDTO> removeTask(@PathVariable Long id) {
 		service.removeTask(id);

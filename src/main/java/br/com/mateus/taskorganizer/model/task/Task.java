@@ -24,13 +24,17 @@ import lombok.Setter;
 @EqualsAndHashCode(of = "id")
 public class Task {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter
+	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter
 	private Long id;
 	
-	@Column(unique = true)
+	@Column
 	private String title;
+	
 	private String description;
 	private LocalDate dueDate;
+	
 	@Enumerated(EnumType.STRING)
 	private StatusTask status;
 	
@@ -38,17 +42,23 @@ public class Task {
 	private User user;
 	
 	
-	public Task(String title, String description, LocalDate dueDate, StatusTask status, User user) {
+	public Task(String title, String description, LocalDate dueDate, User user) {
 		this.title = title;
 		this.description = description;
 		this.dueDate = dueDate;
-		this.status = status;
+		this.status = StatusTask.PENDING;
 		this.user = user;
 	}
 	public void updateTask(String title, String description, LocalDate dueDate, StatusTask status) {
+		if (title != null && title.isBlank())
+			throw new IllegalArgumentException("Title cannot be empty");
+		if (dueDate != null && dueDate.isBefore(LocalDate.now()))
+			throw new IllegalArgumentException("Due date cannot be in the past");
+		
 		this.title = title;
-		this.description = description;
 		this.dueDate = dueDate;
-		this.status = status;
+		
+		this.description = description != null ? description : this.description;
+		this.status = status != null ? status : this.status;
 	}
 }

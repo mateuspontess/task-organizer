@@ -1,13 +1,13 @@
 package br.com.mateus.taskorganizer.infra.exception;
 
-import org.springframework.dao.DataIntegrityViolationException;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,44 +22,47 @@ public class ErrorHandler {
 		return ResponseEntity.notFound().build();
 	}
 	
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity handleError400(MethodArgumentNotValidException ex) {
-		var erros = ex.getFieldErrors();
-		return ResponseEntity.badRequest().body(erros.stream().map(DataValidationErrorDTO::new).toList());
-	}
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorMessageWithFields> handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    	
+    	var fields = ex.getFieldErrors().stream()
+    			.collect(Collectors.toMap(f -> f.getField().toString(), f -> f.getDefaultMessage()));
+    	
+    	var response = new ErrorMessageWithFields(
+    			"Input validation error",
+    			fields);
+    	
+    	return ResponseEntity
+    			.badRequest()
+    			.body(response);
+    }
+    
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity handleError400(HttpMessageNotReadableException ex) {
-        return ResponseEntity.badRequest().body(new DataValidationErrorDTO(null, ex.getMessage()));
+        return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity handleErrorBadCredentials() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorMessage("Invalid credentials"));
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity handleErrorAuthentication() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorMessage("Authentication failed"));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity handleErrorAccessDenied() {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorMessage("Access denied"));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleError500(Exception ex) {
-    	var seila = ex.getLocalizedMessage();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getLocalizedMessage());
-    }
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity handleError500(DataIntegrityViolationException ex) {
-    	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getRootCause().getMessage());
+    	ex.printStackTrace();
+    	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Internal server error"));
     }
     
-    private record DataValidationErrorDTO(String field, String message) {
-        public DataValidationErrorDTO(FieldError erro) {
-            this(erro.getField(), erro.getDefaultMessage());
-        }
-    }
+    private record ErrorMessage(String error) {};
+    private record ErrorMessageWithFields(String error, Object fields) {};
 }

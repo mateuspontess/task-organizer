@@ -31,7 +31,7 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 						.requestMatchers(HttpMethod.POST, "/auth/admin/register").hasRole("ADMIN")
 						.requestMatchers("/v3/api-docs/**", "/swagger-ui.html/**", "/swagger-ui/**").permitAll()
-						.requestMatchers(HttpMethod.POST, "/organizer/tasks").hasRole("ADMIN")
+						.requestMatchers("/tasks").authenticated()
 						.anyRequest().authenticated()
 						)
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
