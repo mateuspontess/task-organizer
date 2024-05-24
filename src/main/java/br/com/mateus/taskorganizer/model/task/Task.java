@@ -43,22 +43,37 @@ public class Task {
 	
 	
 	public Task(String title, String description, LocalDate dueDate, User user) {
+		this.validateTitle(title);
+		this.validateDueDate(dueDate);
 		this.title = title;
-		this.description = description;
 		this.dueDate = dueDate;
-		this.status = StatusTask.PENDING;
+		
+		this.description = description;
 		this.user = user;
+		this.status = StatusTask.PENDING;
 	}
+	
 	public void updateTask(String title, String description, LocalDate dueDate, StatusTask status) {
-		if (title != null && title.isBlank())
-			throw new IllegalArgumentException("Title cannot be empty");
+		if (title != null && !title.isBlank())
+			this.title = title;
+		
+		if (description != null && !description.isBlank())
+			this.description = description;
+		
+		if (status != null)
+			this.status = status;
+		
+		this.validateDueDate(dueDate);
+		if (dueDate != null)
+			this.dueDate = dueDate;
+	}
+	
+	private void validateTitle(String title) {
+		if (title == null || title.isBlank())
+			throw new IllegalArgumentException("Title cannot be null or blank");
+	}
+	private void validateDueDate(LocalDate dueDate) {
 		if (dueDate != null && dueDate.isBefore(LocalDate.now()))
 			throw new IllegalArgumentException("Due date cannot be in the past");
-		
-		this.title = title;
-		this.dueDate = dueDate;
-		
-		this.description = description != null ? description : this.description;
-		this.status = status != null ? status : this.status;
 	}
 }
