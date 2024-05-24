@@ -1,4 +1,4 @@
-package br.com.mateus.taskorganizer.controller;
+package br.com.mateus.taskorganizer.integration.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

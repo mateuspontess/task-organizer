@@ -1,10 +1,13 @@
-package br.com.mateus.taskorganizer.model.task;
+package br.com.mateus.taskorganizer.unit.model.task;
 
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import br.com.mateus.taskorganizer.model.task.StatusTask;
+import br.com.mateus.taskorganizer.model.task.Task;
 
 class TaskTest {
 	

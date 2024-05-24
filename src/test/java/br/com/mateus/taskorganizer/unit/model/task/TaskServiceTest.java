@@ -1,4 +1,4 @@
-package br.com.mateus.taskorganizer.model.task;
+package br.com.mateus.taskorganizer.unit.model.task;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -24,6 +24,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import br.com.mateus.taskorganizer.model.task.Task;
+import br.com.mateus.taskorganizer.model.task.TaskCreateDTO;
+import br.com.mateus.taskorganizer.model.task.TaskRepository;
+import br.com.mateus.taskorganizer.model.task.TaskResponseDTO;
+import br.com.mateus.taskorganizer.model.task.TaskService;
+import br.com.mateus.taskorganizer.model.task.TaskUpdateDTO;
 import br.com.mateus.taskorganizer.model.user.User;
 import br.com.mateus.taskorganizer.model.user.UserRole;
 
