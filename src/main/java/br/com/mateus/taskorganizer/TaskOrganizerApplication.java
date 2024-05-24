@@ -9,5 +9,4 @@ public class TaskOrganizerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TaskOrganizerApplication.class, args);
 	}
-
 }
