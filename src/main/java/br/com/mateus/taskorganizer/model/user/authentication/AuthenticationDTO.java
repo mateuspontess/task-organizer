@@ -1,3 +1,3 @@
 package br.com.mateus.taskorganizer.model.user.authentication;
 
-public record RegisterDTO(String login, String password) {}
+public record AuthenticationDTO(String login, String password) {}

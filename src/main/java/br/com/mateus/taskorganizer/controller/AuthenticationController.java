@@ -14,9 +14,8 @@ import br.com.mateus.taskorganizer.infra.security.TokenService;
 import br.com.mateus.taskorganizer.model.user.User;
 import br.com.mateus.taskorganizer.model.user.UserRepository;
 import br.com.mateus.taskorganizer.model.user.UserRole;
-import br.com.mateus.taskorganizer.model.user.authentication.DataAuthenticationDTO;
+import br.com.mateus.taskorganizer.model.user.authentication.AuthenticationDTO;
 import br.com.mateus.taskorganizer.model.user.authentication.LoginResponseDTO;
-import br.com.mateus.taskorganizer.model.user.authentication.RegisterDTO;
 import jakarta.validation.Valid;
 
 @RestController
@@ -31,7 +30,7 @@ public class AuthenticationController {
 	private TokenService tokenService;
 	
 	@PostMapping("/login")
-	public ResponseEntity login(@RequestBody @Valid DataAuthenticationDTO data) {
+	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
 		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
 		var auth = this.authenticationManager.authenticate(usernamePassword);
 		
@@ -41,7 +40,7 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
+	public ResponseEntity register(@RequestBody @Valid AuthenticationDTO data) {
 		if(this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
 		
 		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
@@ -53,7 +52,7 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/admin/register")
-	public ResponseEntity adminRegister(@RequestBody @Valid RegisterDTO data) {
+	public ResponseEntity adminRegister(@RequestBody @Valid AuthenticationDTO data) {
 		if(this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
 		
 		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
