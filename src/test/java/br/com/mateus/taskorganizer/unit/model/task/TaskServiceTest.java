@@ -63,10 +63,13 @@ class TaskServiceTest {
 	@Test
 	@DisplayName("Must create a Task with the same attributes as the DTO")
 	void registerTaskTest() {
+		// arrange
 		TaskCreateDTO dto = new TaskCreateDTO("title", "description", LocalDate.now());
 
+		// act
         service.registerTask(dto);
 		
+        // assert
 		verify(repository).save(taskCaptor.capture());
 		Task taskCaptured = taskCaptor.getValue();
 		
