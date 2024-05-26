@@ -15,7 +15,7 @@ import br.com.mateus.taskorganizer.model.user.User;
 import br.com.mateus.taskorganizer.model.user.UserRepository;
 import br.com.mateus.taskorganizer.model.user.UserRole;
 import br.com.mateus.taskorganizer.model.user.authentication.AuthenticationDTO;
-import br.com.mateus.taskorganizer.model.user.authentication.LoginResponseDTO;
+import br.com.mateus.taskorganizer.model.user.authentication.AuthenticationResponseDTO;
 import jakarta.validation.Valid;
 
 @RestController
@@ -36,7 +36,7 @@ public class AuthenticationController {
 		
 		var token = tokenService.generateToken((User) auth.getPrincipal());
 		
-		return ResponseEntity.ok(new LoginResponseDTO(token));
+		return ResponseEntity.ok(new AuthenticationResponseDTO(token));
 	}
 	
 	@PostMapping("/register")
