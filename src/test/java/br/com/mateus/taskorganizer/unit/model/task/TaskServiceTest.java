@@ -63,90 +63,93 @@ class TaskServiceTest {
 	@Test
 	@DisplayName("Must create a Task with the same attributes as the DTO")
 	void registerTaskTest() {
-		// arrange
-		TaskCreateDTO dto = new TaskCreateDTO("title", "description", LocalDate.now());
+	    // arrange
+	    TaskCreateDTO dto = new TaskCreateDTO("title", "description", LocalDate.now());
 
-		// act
-        service.registerTask(dto);
-		
-        // assert
-		verify(repository).save(taskCaptor.capture());
-		Task taskCaptured = taskCaptor.getValue();
-		
-		Assertions.assertEquals(taskCaptured.getTitle(), dto.title());
-		Assertions.assertEquals(taskCaptured.getDescription(), dto.description());
-		Assertions.assertEquals(taskCaptured.getDueDate(), dto.dueDate());
+	    // act
+	    service.registerTask(dto);
+	    
+	    // assert
+	    verify(repository).save(taskCaptor.capture());
+	    Task taskCaptured = taskCaptor.getValue();
+	    
+	    Assertions.assertEquals(taskCaptured.getTitle(), dto.title(), "The title of the task should match the title in the DTO");
+	    Assertions.assertEquals(taskCaptured.getDescription(), dto.description(), "The description of the task should match the description in the DTO");
+	    Assertions.assertEquals(taskCaptured.getDueDate(), dto.dueDate(), "The due date of the task should match the due date in the DTO");
 	}
 	
 	@Test
-	@DisplayName("Should return a list of TaskResponseDTO")
+	@DisplayName("Should return a list of TaskResponseDTO with correct attributes")
 	void listTasksTest() {
-		// arrange
-		List<Task> tasks = List.of(
-				new Task("title-1", "description-1", LocalDate.now(), new User()),
-				new Task("title-2", "description-2", LocalDate.now(), new User())
-				);
-		when(repository.findAllByUserId(anyLong())).thenReturn(tasks);
-		
-		// act
-		List<TaskResponseDTO> result = service.listTasks();
-		
-		// assert
-		assertNotNull(result);
-		Assertions.assertNotEquals(0, result.size());
-		Assertions.assertEquals(2, result.size());
+	    // arrange
+	    List<Task> tasks = List.of(
+	            new Task("title-1", "description-1", LocalDate.now(), new User()),
+	            new Task("title-2", "description-2", LocalDate.now(), new User())
+	    );
+	    when(repository.findAllByUserId(anyLong())).thenReturn(tasks);
+	    
+	    // act
+	    List<TaskResponseDTO> result = service.listTasks();
+	    
+	    // assert
+	    assertNotNull(result, "The result list should not be null");
+	    Assertions.assertNotEquals(0, result.size(), "The result list should not be empty");
+	    Assertions.assertEquals(2, result.size(), "The result list should contain 2 items");
 
-		Map<String, Task> taskMap = tasks.stream().collect(Collectors.toMap(t -> t.getTitle(), t -> t));
-		result.forEach(dto -> {
-			Task taskMapped = taskMap.get(dto.title());
-			
-			Assertions.assertEquals(taskMapped.getDescription(), dto.description());
-			Assertions.assertEquals(taskMapped.getDueDate(), dto.dueDate());
-		});
+	    Map<String, Task> taskMap = tasks.stream().collect(Collectors.toMap(Task::getTitle, t -> t));
+	    result.forEach(dto -> {
+	        Task taskMapped = taskMap.get(dto.title());
+	        
+	        Assertions.assertNotNull(taskMapped, "The mapped task should not be null");
+	        Assertions.assertEquals(taskMapped.getDescription(), dto.description(), "The description should match the task description");
+	        Assertions.assertEquals(taskMapped.getDueDate(), dto.dueDate(), "The due date should match the task due date");
+	    });
 	}
 	
 	@Test
-	@DisplayName("Should return a updated Task")
+	@DisplayName("Should update and return the Task with the new values")
 	void updateTaskTest() {
-		// arrange
-		Task task = new Task("title", "description", LocalDate.now(), new User());
+	    // arrange
+	    Task task = new Task("title", "description", LocalDate.now(), new User());
 
-		Long taskId = 1L;
-		TaskUpdateDTO dto = new TaskUpdateDTO(
-				"title-update", 
-				"description-updated", 
-				LocalDate.now().plusDays(1l),
-				"CONCLUDED");
-		
-		when(repository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(task);
-		
-		// act
-		service.updateTask(taskId, dto);
-		
-		// assert
-		verify(repository).save(taskCaptor.capture());
-		Task taskCaptured = taskCaptor.getValue();
-		
-		Assertions.assertEquals(taskCaptured.getTitle(), dto.title());
-		Assertions.assertEquals(taskCaptured.getDescription(), dto.description());
-		Assertions.assertEquals(taskCaptured.getDueDate(), dto.dueDate());
-		Assertions.assertEquals(taskCaptured.getStatus().toString(), dto.status());
+	    Long taskId = 1L;
+	    TaskUpdateDTO dto = new TaskUpdateDTO(
+	            "title-update", 
+	            "description-updated", 
+	            LocalDate.now().plusDays(1L),
+	            "CONCLUDED");
+	    
+	    when(repository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(task);
+	    
+	    // act
+	    service.updateTask(taskId, dto);
+	    
+	    // assert
+	    verify(repository).save(taskCaptor.capture());
+	    Task taskCaptured = taskCaptor.getValue();
+	    
+	    Assertions.assertEquals(taskCaptured.getTitle(), dto.title(), "The title should be updated to the new value");
+	    Assertions.assertEquals(taskCaptured.getDescription(), dto.description(), "The description should be updated to the new value");
+	    Assertions.assertEquals(taskCaptured.getDueDate(), dto.dueDate(), "The due date should be updated to the new value");
+	    Assertions.assertEquals(taskCaptured.getStatus().toString(), dto.status(), "The status should be updated to the new value");
 	}
+
 	
 	@Test
-	@DisplayName("Should return a TaskResponseDTO with the same attributes of Task")
+	@DisplayName("Should return a TaskResponseDTO with the same attributes as Task")
 	void showTaskTest() {
-		// arrange
-		Task task = new Task("title-1", "description-1", LocalDate.now(), new User());
-		when(repository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(task);
-		
-		// act
-		TaskResponseDTO dto = service.showTask(1l);
-		
-		// assert
-		assertNotNull(dto);
-		Assertions.assertEquals(task.getTitle(), dto.title());
-		Assertions.assertEquals(task.getDescription(), dto.description());
-		Assertions.assertEquals(task.getDueDate(), dto.dueDate());
+	    // arrange
+	    Task task = new Task("title-1", "description-1", LocalDate.now(), new User());
+	    when(repository.findByIdAndUserId(anyLong(), anyLong())).thenReturn(task);
+	    
+	    // act
+	    TaskResponseDTO dto = service.showTask(1L);
+	    
+	    // assert
+	    assertNotNull(dto, "The TaskResponseDTO should not be null");
+	    Assertions.assertEquals(task.getTitle(), dto.title(), "The title should match the task's title");
+	    Assertions.assertEquals(task.getDescription(), dto.description(), "The description should match the task's description");
+	    Assertions.assertEquals(task.getDueDate(), dto.dueDate(), "The due date should match the task's due date");
 	}
+
 }
