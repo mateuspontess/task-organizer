@@ -1,6 +1,7 @@
 package br.com.mateus.taskorganizer.integration.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import java.io.IOException;
 import java.time.LocalDate;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import br.com.mateus.taskorganizer.model.task.StatusTask;
@@ -62,75 +65,88 @@ public class TaskControllerTest {
 							.build();
 	private TaskCreateDTO taskCreate = new TaskCreateDTO("Test-title", "Description-test", date);
 	private TaskUpdateDTO taskUpdate = new TaskUpdateDTO("Test-title", "Description-test", date, StatusTask.CONCLUDED.toString());
-	private TaskResponseDTO taskReponse = new TaskResponseDTO(task);
+	private TaskResponseDTO taskResponse = new TaskResponseDTO(task);
 	
 	
 	@Test
 	@DisplayName("Return status code 400 when invalid informations")
 	@WithMockUser
 	void registerTaskTest01() throws Exception {
-		var response = mvc.perform(post(this.incrementContextUrl("")))
-				.andReturn().getResponse();
-		
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+	    // arrange
+	    String invalidTaskJson = "{}";
+
+	    // act
+	    var response = mvc.perform(post(this.incrementContextUrl(""))
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .content(invalidTaskJson))
+	                .andReturn().getResponse();
+	    
+	    // assert
+	    Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus(), "Expected HTTP status 400 (BAD_REQUEST) when invalid information is provided");
 	}
-	
+    
     @Test
-    @DisplayName("Return status code 200 and expetected json")
+    @DisplayName("Return status code 201 and expected json")
     @WithMockUser
     void registerTaskTest02() throws Exception {
-    	//retorna um valor válido do service
-		when(taskService.registerTask(any())).thenReturn(task);
+        // arrange
+        when(taskService.registerTask(any())).thenReturn(task);
+
+        // act
+        var result = mvc.perform(MockMvcRequestBuilders
+                .post(this.incrementContextUrl(""))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(taskRequestJson.write(taskCreate).getJson()))
+                .andReturn();
         
-    	var response = mvc.perform(MockMvcRequestBuilders
-				.post(this.incrementContextUrl(""))
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(taskRequestJson.write(taskCreate)
-						.getJson())
-			)
-			.andReturn().getResponse();
-    	
-		var expectedJson = taskResponseJson.write(taskReponse).getJson();
-		
-		assertThat(response.getContentAsString()).isEqualTo(expectedJson);
+        // assert
+        Assertions.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus(), "Expected HTTP status 201 (Created)");
+        Assertions.assertEquals(taskResponseJson.write(taskResponse).getJson(), result.getResponse().getContentAsString(), "Expected JSON response");
     }
     
-	@Test
-	@DisplayName("Return status code 400 when invalid informations")
-	@WithMockUser
-	void updateTaskTest01() throws Exception {
-		var response = mvc.perform(put(this.incrementContextUrl("/1")))
-			.andReturn().getResponse();
-		
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-	}
     @Test
-    @DisplayName("Return status code 200 and expetected json")
+    @DisplayName("Return status code 400 when invalid information")
     @WithMockUser
-	public void updateTaskTest02() throws IOException, Exception {
-		when(taskService.updateTask(anyLong(),any())).thenReturn(task);
-		
-		var response = mvc.perform(MockMvcRequestBuilders
-				.put(this.incrementContextUrl("/1"))
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(taskUpdateJson.write(taskUpdate)
-						.getJson())
-			)
-			.andReturn().getResponse();
-		
-		var expectedJson = taskResponseJson.write(taskReponse).getJson();
-		assertThat(response.getContentAsString()).isEqualTo(expectedJson);
-	}
+    void updateTaskTest01() throws Exception {
+        // act
+        MvcResult result = mvc.perform(put(this.incrementContextUrl("/1")))
+                .andReturn();
+
+        // assert
+        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus(), "Expected HTTP status 400 (BAD REQUEST)");
+    }
+
+    @Test
+    @DisplayName("Return status code 200 and expected JSON")
+    @WithMockUser
+    public void updateTaskTest02() throws Exception {
+        // arrange
+        when(taskService.updateTask(anyLong(), any())).thenReturn(task);
+
+        // act
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                .put(this.incrementContextUrl("/1"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(taskUpdateJson.write(taskUpdate).getJson()))
+                .andReturn();
+
+        // assert
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus(), "Expected HTTP status 200 (OK)");
+        assertEquals(taskResponseJson.write(taskResponse).getJson(), result.getResponse().getContentAsString(), "Expected JSON response");
+    }
+
 	
     @Test
-	@DisplayName("Return status code 400 when invalid informations")
-	@WithMockUser
-	void removeTaskTest() throws Exception {
-		var response = mvc.perform(delete(this.incrementContextUrl("/1")))
-			.andReturn().getResponse();
-		
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
-	}
+    @DisplayName("Return status code 400 when invalid informations")
+    @WithMockUser
+    void removeTaskTest() throws Exception {
+        // act
+        MvcResult result = mvc.perform(delete(this.incrementContextUrl("/1")))
+                .andReturn();
+
+        // assert
+        assertEquals(HttpStatus.NO_CONTENT.value(), result.getResponse().getStatus(), "Expected HTTP status 400 (Bad Request)");
+    }
     
     public String incrementContextUrl(String url) {
         return this.contextUrl+url;
