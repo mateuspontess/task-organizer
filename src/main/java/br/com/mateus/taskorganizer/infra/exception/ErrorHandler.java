@@ -18,7 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class ErrorHandler {
 
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity handleError404() {
+	public ResponseEntity<Void> handleError404() {
 		return ResponseEntity.notFound().build();
 	}
 	
@@ -38,27 +38,27 @@ public class ErrorHandler {
     }
     
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity handleError400(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ErrorMessage> handleError400(HttpMessageNotReadableException ex) {
         return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity handleErrorBadCredentials() {
+    public ResponseEntity<ErrorMessage> handleErrorBadCredentials() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorMessage("Invalid credentials"));
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity handleErrorAuthentication() {
+    public ResponseEntity<ErrorMessage> handleErrorAuthentication() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorMessage("Authentication failed"));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity handleErrorAccessDenied() {
+    public ResponseEntity<ErrorMessage> handleErrorAccessDenied() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorMessage("Access denied"));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity handleError500(Exception ex) {
+    public ResponseEntity<ErrorMessage> handleError500(Exception ex) {
     	ex.printStackTrace();
     	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Internal server error"));
     }

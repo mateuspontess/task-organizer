@@ -12,21 +12,21 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
-import br.com.mateus.taskorganizer.model.user.User;
+import br.com.mateus.taskorganizer.infra.persistence.user.UserEntity;
 
 @Service
 public class TokenService {
 	@Value("${api.security.token.secret}")
 	private String secret;
 	
-	public String generateToken(User user) {
+	public String generateToken(UserEntity userEntity) {
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(secret);
 			String token = JWT.create()
-					.withIssuer("task-organizer-api")
-					.withSubject(user.getUsername())
-					.withExpiresAt(this.genExpirationDate())
-					.sign(algorithm);
+				.withIssuer("task-organizer-api")
+				.withSubject(userEntity.getLogin())
+				.withExpiresAt(this.genExpirationDate())
+				.sign(algorithm);
 			
 			return token;
 		} catch (JWTCreationException e) {
@@ -38,10 +38,11 @@ public class TokenService {
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(secret);
 			return JWT.require(algorithm)
-					.withIssuer("task-organizer-api")
-					.build()
-					.verify(token)
-					.getSubject();
+				.withIssuer("task-organizer-api")
+				.build()
+				.verify(token)
+				.getSubject();
+				
 		} catch (JWTVerificationException e) {
 			return "";
 		}
