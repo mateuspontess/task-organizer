@@ -12,5 +12,6 @@ log/
 target/
 .idea/
 build/
-.mvn/
 HELP.md
+launch.json
+settings.json
