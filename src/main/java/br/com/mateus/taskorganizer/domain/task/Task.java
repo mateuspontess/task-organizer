@@ -15,6 +15,12 @@ public class Task {
 	public Task() {}
 
 	public Task(Long id, String title, String description, LocalDate dueDate, StatusTask status, Long userId) {
+		this.cannotBeNull(id, "id");
+		this.cannotBeNullOrBlank(title, "title");
+		this.cannotBeInThePast(dueDate);
+		this.cannotBeNull(status, "status");
+		this.cannotBeNull(userId, "userId");
+
         this.id = id;
         this.title = title;
         this.description = description;
@@ -24,17 +30,18 @@ public class Task {
     }
 	
 	public Task(String title, String description, LocalDate dueDate, Long userId) {
-		this.validateTitle(title);
-		this.validateDueDate(dueDate);
+		this.cannotBeNullOrBlank(title, "title");
+		this.cannotBeInThePast(dueDate);
+		this.cannotBeNull(userId, "userId");
+
 		this.title = title;
 		this.dueDate = dueDate;
-		
 		this.description = description;
 		this.userId = userId;
 		this.status = StatusTask.PENDING;
 	}
 	
-	public void updateTask(String title, String description, LocalDate dueDate, StatusTask status) {
+	public void updateTask(String title, String description, LocalDate dueDatee, StatusTask status) {
 		if (title != null && !title.isBlank())
 			this.title = title;
 		
@@ -44,21 +51,36 @@ public class Task {
 		if (status != null)
 			this.status = status;
 		
-		this.validateDueDate(dueDate);
-		if (dueDate != null)
-			this.dueDate = dueDate;
+		if (dueDatee != null) {
+			this.cannotBeInThePast(dueDatee);
+			this.dueDate = dueDatee;
+		}
+	}
+	public void removeDueDate() {
+		this.dueDate = null;
+	}
+	public void removeDescription() {
+		this.description = "";
 	}
 	
-	private void validateTitle(String title) {
-		if (title == null || title.isBlank())
-			throw new IllegalArgumentException("Title cannot be null or blank");
-	}
-	private void validateDueDate(LocalDate dueDate) {
+	private void cannotBeInThePast(LocalDate dueDate) {
 		if (dueDate != null && dueDate.isBefore(LocalDate.now()))
-			throw new IllegalArgumentException("Due date cannot be in the past");
+			throw new IllegalArgumentException("Cannot be in the past: " + "dueDate");
+	}
+	private void cannotBeNull(Object field, String fieldName) {
+		if (field == null)
+			throw new IllegalArgumentException("Cannot be null: " + fieldName);
+	}
+	private void cannotBeNullOrBlank(String field, String fieldName) {
+		this.cannotBeNull(field, fieldName);
+		if (field.isBlank())
+			throw new IllegalArgumentException("Cannot be blank: " + fieldName);
+	}
+	private void cannotBeBlank(String field, String fieldName) {
+		if (field != null && field.isBlank())
+			throw new IllegalArgumentException("Cannot be blank: " + fieldName);
 	}
 
-	
 	public void setId(Long id) {
 		this.id = id;
 	}
