@@ -1,4 +1,4 @@
-package br.com.mateus.taskorganizer.application.dto.task;
+package br.com.mateus.taskorganizer.application.dto.task.output;
 import java.time.LocalDate;
 
 import br.com.mateus.taskorganizer.domain.task.StatusTask;
@@ -10,7 +10,7 @@ public record TaskResponseDTO(
 		String description,
 		LocalDate dueDate,
 		StatusTask status
-		) {
+	) {
 	
 	public TaskResponseDTO(Task t) {
 		this(t.getId(), t.getTitle(), t.getDescription(), t.getDueDate(), t.getStatus());
