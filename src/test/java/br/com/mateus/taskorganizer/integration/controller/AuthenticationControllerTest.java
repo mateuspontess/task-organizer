@@ -1,6 +1,7 @@
 package br.com.mateus.taskorganizer.integration.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -61,7 +62,8 @@ public class AuthenticationControllerTest {
 
         // act and assert
         this.postRequest("/login" , requestBody)
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.token").exists());
     }
     @Test
     void loginTestMustReturnStatus400WhenPassingInvalidDataTest() throws Exception {
