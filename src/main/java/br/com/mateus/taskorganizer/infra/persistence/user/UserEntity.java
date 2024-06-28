@@ -33,18 +33,22 @@ import lombok.NoArgsConstructor;
 public class UserEntity implements UserDetails {
 	
 	@Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Long id;
 	
+	@Column(nullable = false, unique = true)
 	private String login;
+
+	@Column(nullable = false)
 	private String password;
 	
 	@Enumerated(EnumType.STRING) 
+	@Column(nullable = false)
 	private UserRole role;
 	
 	@ElementCollection
     @CollectionTable(name = "user_tasks", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "task_id")
+    @Column(name = "task_id", nullable = true)
 	private List<Long> taskIds = new ArrayList<>();
 
 
@@ -63,7 +67,7 @@ public class UserEntity implements UserDetails {
 	public List<UserRole> getRoles() {
 		return (this.role == UserRole.ADMIN) ? List.of(UserRole.ADMIN, UserRole.USER) : List.of(UserRole.USER);
 	}
-	public List<String> getRolesAsString() {
+	private List<String> getRolesAsString() {
 		return (this.role == UserRole.ADMIN) ? List.of("ROLE_ADMIN", "ROLE_USER") : List.of("ROLE_USER");
 	}
 	
