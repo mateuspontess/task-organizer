@@ -1,6 +1,6 @@
 ## 🖥️ About the project
 
-Task Organizer is a simple CRUD application for users to register and organize their personal tasks.
+This is a simples CRUD application fully structured with Clean Architecture. Task Organizer is a simple CRUD application for users to register and organize their personal tasks.
 
 --- 
 
