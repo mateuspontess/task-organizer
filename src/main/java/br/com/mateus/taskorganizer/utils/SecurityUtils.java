@@ -8,14 +8,19 @@ public class SecurityUtils {
 
     private SecurityUtils() {}
 
-    public static UserEntity getUser() {
+    private static UserEntity getUserDetails() {
         return (UserEntity) SecurityContextHolder
             .getContext()
             .getAuthentication()
             .getPrincipal();
     }
+
     public static Long getUserId() {
-        UserEntity entity = getUser();
+        UserEntity entity = getUserEntity();
         return entity.getId();
+    }
+
+    public static UserEntity getUserEntity() {
+        return (UserEntity) getUserDetails();
     }
 }

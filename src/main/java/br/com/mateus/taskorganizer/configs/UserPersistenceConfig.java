@@ -9,7 +9,7 @@ import br.com.mateus.taskorganizer.infra.gateways.user.UserEntityMapper;
 import br.com.mateus.taskorganizer.infra.gateways.user.UserRepositoryImplJPA;
 import br.com.mateus.taskorganizer.infra.persistence.user.UserRepositoryJPA;
 import br.com.mateus.taskorganizer.application.usecases.user.ExistsByLogin;
-import br.com.mateus.taskorganizer.application.usecases.user.ReadUserByUsername;
+import br.com.mateus.taskorganizer.application.usecases.user.ReadUserByLogin;
 
 @Configuration
 public class UserPersistenceConfig {
@@ -30,8 +30,8 @@ public class UserPersistenceConfig {
     }
 
     @Bean
-    ReadUserByUsername readUserByUsername(UserRepository repository) {
-        return new ReadUserByUsername(repository);
+    ReadUserByLogin readUserByUsername(UserRepository repository) {
+        return new ReadUserByLogin(repository);
     }
 
     @Bean

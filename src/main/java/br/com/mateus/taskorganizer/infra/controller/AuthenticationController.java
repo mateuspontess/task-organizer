@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.mateus.taskorganizer.application.dto.AuthenticationResponseDTO;
-import br.com.mateus.taskorganizer.application.dto.user.AuthenticationDTO;
+import br.com.mateus.taskorganizer.application.dto.user.input.AuthenticationDTO;
+import br.com.mateus.taskorganizer.application.dto.user.output.AuthenticationResponseDTO;
 import br.com.mateus.taskorganizer.application.usecases.user.ExistsByLogin;
 import br.com.mateus.taskorganizer.application.usecases.user.SaveUser;
 import br.com.mateus.taskorganizer.domain.user.User;

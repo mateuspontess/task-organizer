@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.mateus.taskorganizer.application.dto.task.TaskCreateDTO;
-import br.com.mateus.taskorganizer.application.dto.task.TaskResponseDTO;
-import br.com.mateus.taskorganizer.application.dto.task.TaskUpdateDTO;
+import br.com.mateus.taskorganizer.application.dto.task.input.TaskCreateDTO;
+import br.com.mateus.taskorganizer.application.dto.task.input.TaskUpdateDTO;
+import br.com.mateus.taskorganizer.application.dto.task.output.TaskResponseDTO;
 import br.com.mateus.taskorganizer.application.usecases.task.ReadAllTasksByUserId;
 import br.com.mateus.taskorganizer.application.usecases.task.ReadTaskByIdAndUserId;
 import br.com.mateus.taskorganizer.application.usecases.task.RemoveTaskByIdAndUserId;
@@ -45,8 +45,8 @@ public class TaskController {
 	private RemoveTaskByIdAndUserId removeTaskByIdAndUserId;
 	
 	
-	@PostMapping
 	@Transactional
+	@PostMapping
 	public ResponseEntity<TaskResponseDTO> registerTask(@RequestBody @Valid TaskCreateDTO dto, UriComponentsBuilder uriBuilder) {
 		Task task = new Task(dto.title(), dto.description(), dto.dueDate(), SecurityUtils.getUserId());
 		task = createTask.registerTask(task);
@@ -63,19 +63,19 @@ public class TaskController {
 			.toList());
 	}
 	
-	@PutMapping("/{taskId}")
-	@Transactional
-	public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long taskId, @RequestBody TaskUpdateDTO dto) {
-		return ResponseEntity.ok(new TaskResponseDTO(updateTask.updateTaskData(taskId, SecurityUtils.getUserId(), dto)));
-	}
-
 	@GetMapping("/{taskId}")
 	public ResponseEntity<TaskResponseDTO> showTask(@PathVariable Long taskId) {
 		return ResponseEntity.ok(new TaskResponseDTO(readTaskByIdAndUserId.getTaskByIdAndUserId(taskId, SecurityUtils.getUserId())));
 	}
 	
-	@DeleteMapping("/{taskId}")
 	@Transactional
+	@PutMapping("/{taskId}")
+	public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long taskId, @RequestBody TaskUpdateDTO dto) {
+		return ResponseEntity.ok(new TaskResponseDTO(updateTask.updateTaskData(taskId, SecurityUtils.getUserId(), dto)));
+	}
+	
+	@Transactional
+	@DeleteMapping("/{taskId}")
 	public ResponseEntity<TaskResponseDTO> removeTask(@PathVariable Long taskId) {
 		removeTaskByIdAndUserId.deleteTaskByIdAndUserId(taskId, SecurityUtils.getUserId());
 		return ResponseEntity.noContent().build();

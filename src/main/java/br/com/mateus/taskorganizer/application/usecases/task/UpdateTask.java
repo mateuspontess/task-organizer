@@ -1,6 +1,6 @@
 package br.com.mateus.taskorganizer.application.usecases.task;
 
-import br.com.mateus.taskorganizer.application.dto.task.TaskUpdateDTO;
+import br.com.mateus.taskorganizer.application.dto.task.input.TaskUpdateDTO;
 import br.com.mateus.taskorganizer.application.gateways.TaskRepository;
 import br.com.mateus.taskorganizer.domain.task.Task;
 

@@ -16,6 +16,7 @@ import br.com.mateus.taskorganizer.infra.persistence.user.UserEntity;
 
 @Service
 public class TokenService {
+	
 	@Value("${api.security.token.secret}")
 	private String secret;
 	

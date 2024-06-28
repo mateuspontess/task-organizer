@@ -11,7 +11,7 @@ public class ExistsByLogin {
         this.repository = repository;
     }
 
-    public boolean existsByLogin(String username) {
-        return this.repository.existsByLogin(username);
+    public boolean existsByLogin(String login) {
+        return this.repository.existsByLogin(login);
     }
 }
