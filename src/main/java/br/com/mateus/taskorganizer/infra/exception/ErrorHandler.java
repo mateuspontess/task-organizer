@@ -26,24 +26,31 @@ public class ErrorHandler {
     public ResponseEntity<ErrorMessageWithFields> handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
     	
     	var fields = ex.getFieldErrors().stream()
-    			.collect(Collectors.toMap(f -> f.getField().toString(), f -> f.getDefaultMessage()));
+            .collect(Collectors.toMap(f -> f.getField().toString(), f -> f.getDefaultMessage()));
     	
     	var response = new ErrorMessageWithFields(
-    			"Input validation error",
-    			fields);
+            "Input validation error",
+            fields);
     	
     	return ResponseEntity
-    			.badRequest()
-    			.body(response);
+            .badRequest()
+            .body(response);
     }
     
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorMessage> handleError400(IllegalArgumentException ex) {
+        ex.printStackTrace();
+        return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
+    }
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorMessage> handleError400(HttpMessageNotReadableException ex) {
         return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorMessage> handleErrorBadCredentials() {
+    public ResponseEntity<ErrorMessage> handleErrorBadCredentials(BadCredentialsException ex) {
+        ex.printStackTrace();
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorMessage("Invalid credentials"));
     }
 
