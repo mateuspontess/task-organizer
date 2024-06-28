@@ -3,6 +3,7 @@ package br.com.mateus.taskorganizer.infra.persistence.task;
 import java.time.LocalDate;
 
 import br.com.mateus.taskorganizer.domain.task.StatusTask;
+import br.com.mateus.taskorganizer.domain.task.Task;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -47,5 +48,14 @@ public class TaskEntity {
 		this.description = description;
 		this.userId = userId;
 		this.status = StatusTask.PENDING;
+	}
+
+	public TaskEntity(Task task) {
+		this.id = task.getId();
+		this.title = task.getTitle();
+		this.description = task.getDescription();
+		this.dueDate = task.getDueDate();
+		this.status = task.getStatus();
+		this.userId = task.getUserId();
 	}
 }
