@@ -16,7 +16,7 @@ public class Task {
 
 	public Task(Long id, String title, String description, LocalDate dueDate, StatusTask status, Long userId) {
 		this.cannotBeNull(id, "id");
-		this.cannotBeNullOrBlank(title, "title");
+		this.cannotBeBlank(title, "title");
 		this.cannotBeInThePast(dueDate);
 		this.cannotBeNull(status, "status");
 		this.cannotBeNull(userId, "userId");
@@ -30,7 +30,7 @@ public class Task {
     }
 	
 	public Task(String title, String description, LocalDate dueDate, Long userId) {
-		this.cannotBeNullOrBlank(title, "title");
+		this.cannotBeBlank(title, "title");
 		this.cannotBeInThePast(dueDate);
 		this.cannotBeNull(userId, "userId");
 
@@ -71,13 +71,9 @@ public class Task {
 		if (field == null)
 			throw new IllegalArgumentException("Cannot be null: " + fieldName);
 	}
-	private void cannotBeNullOrBlank(String field, String fieldName) {
+	private void cannotBeBlank(String field, String fieldName) {
 		this.cannotBeNull(field, fieldName);
 		if (field.isBlank())
-			throw new IllegalArgumentException("Cannot be blank: " + fieldName);
-	}
-	private void cannotBeBlank(String field, String fieldName) {
-		if (field != null && field.isBlank())
 			throw new IllegalArgumentException("Cannot be blank: " + fieldName);
 	}
 
@@ -108,4 +104,16 @@ public class Task {
 	public Long getUserId() {
 		return userId;
 	}
+
+    @Override
+    public String toString() {
+        return "Task[" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", dueDate=" + dueDate +
+                ", status=" + status +
+                ", userId=" + userId +
+                ']';
+    }
 }
