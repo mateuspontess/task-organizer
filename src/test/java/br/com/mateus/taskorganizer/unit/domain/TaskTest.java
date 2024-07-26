@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
-import java.util.Random;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import br.com.mateus.taskorganizer.tests_utils.TaskUtils;
 
 class TaskTest {
 
-	private final Random random = new Random();
 	private final LocalDate PAST = LocalDate.now().minusDays(20);
 	
 	@Test
