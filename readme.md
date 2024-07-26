@@ -12,8 +12,11 @@ This is a simples CRUD application fully structured with Clean Architecture. Tas
 
 ## 🛠️ Tecnologies 
 
-- [Lombok](https://projectlombok.org/)
+
 - [Spring Boot](https://spring.io/projects/spring-boot)
-- [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/)
+- [MongoDB](https://www.mongodb.com/)
+- [Docker](https://www.docker.com/)
+- [TestContainers](https://testcontainers.com/)
 - [Java JWT (Auth0)](https://github.com/auth0/java-jwt)
+- [Lombok](https://projectlombok.org/)
 - [Springdoc OpenAPI](https://springdoc.org/)
