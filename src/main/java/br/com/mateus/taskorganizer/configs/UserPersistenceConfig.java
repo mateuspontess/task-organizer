@@ -4,12 +4,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import br.com.mateus.taskorganizer.application.gateways.UserRepository;
-import br.com.mateus.taskorganizer.application.usecases.user.SaveUser;
-import br.com.mateus.taskorganizer.infra.gateways.user.UserEntityMapper;
-import br.com.mateus.taskorganizer.infra.gateways.user.UserRepositoryImplJPA;
-import br.com.mateus.taskorganizer.infra.persistence.user.UserRepositoryJPA;
 import br.com.mateus.taskorganizer.application.usecases.user.ExistsByLogin;
 import br.com.mateus.taskorganizer.application.usecases.user.ReadUserByLogin;
+import br.com.mateus.taskorganizer.application.usecases.user.SaveUser;
+import br.com.mateus.taskorganizer.infra.gateways.user.UserEntityMapper;
+import br.com.mateus.taskorganizer.infra.gateways.user.UserRepositoryImplMongoDB;
+import br.com.mateus.taskorganizer.infra.persistence.user.UserRepositoryMongoDB;
 
 @Configuration
 public class UserPersistenceConfig {
@@ -20,8 +20,8 @@ public class UserPersistenceConfig {
     }
 
     @Bean
-    UserRepository getRepository(UserRepositoryJPA repository, UserEntityMapper entityMapper) {
-        return new UserRepositoryImplJPA(repository, entityMapper);
+    UserRepository getRepository(UserRepositoryMongoDB mongoRepository, UserEntityMapper entityMapper) {
+        return new UserRepositoryImplMongoDB(mongoRepository, entityMapper);
     }
 
     @Bean

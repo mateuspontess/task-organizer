@@ -5,7 +5,7 @@ import br.com.mateus.taskorganizer.domain.task.StatusTask;
 import br.com.mateus.taskorganizer.domain.task.Task;
 
 public record TaskResponseDTO(
-		Long id,
+		String id,
 		String title,
 		String description,
 		LocalDate dueDate,

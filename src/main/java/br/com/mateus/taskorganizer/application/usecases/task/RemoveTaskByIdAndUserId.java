@@ -10,7 +10,7 @@ public class RemoveTaskByIdAndUserId {
         this.repository = repository;
     }
 
-    public void deleteTaskByIdAndUserId(Long taskId, Long userId) {
+    public void deleteTaskByIdAndUserId(String taskId, String userId) {
         this.repository.deleteTaskByIdAndUserId(taskId, userId);
     }
 }

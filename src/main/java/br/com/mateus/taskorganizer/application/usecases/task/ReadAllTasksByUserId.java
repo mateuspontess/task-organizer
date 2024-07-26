@@ -13,7 +13,7 @@ public class ReadAllTasksByUserId {
         this.repository = repository;
     }
 
-    public List<Task> getAllTasksByUserId(Long userId) {
+    public List<Task> getAllTasksByUserId(String userId) {
         return this.repository.getAllTasksByUserId(userId);
     }
 }

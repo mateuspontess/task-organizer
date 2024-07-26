@@ -2,15 +2,11 @@ package br.com.mateus.taskorganizer.infra.persistence.task;
 
 import java.time.LocalDate;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import br.com.mateus.taskorganizer.domain.task.StatusTask;
 import br.com.mateus.taskorganizer.domain.task.Task;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,26 +17,20 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "tasks")
+@Document(collection = "tasks")
 public class TaskEntity {
 	
 	@Setter
-	@Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
+	@Id
+	private String id;
     private String title;
     private String description;
     private LocalDate dueDate;
-
-	@Enumerated(EnumType.STRING)
 	private StatusTask status;
-	
-	private Long userId;
+	private String userId;
 
 	
-	public TaskEntity(String title, String description, LocalDate dueDate, Long userId) {
+	public TaskEntity(String title, String description, LocalDate dueDate, String userId) {
         this.title = title;
         this.dueDate = dueDate;
 		this.title = title;

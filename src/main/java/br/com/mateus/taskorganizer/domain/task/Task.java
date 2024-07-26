@@ -4,17 +4,17 @@ import java.time.LocalDate;
 
 public class Task {
 
-	private Long id;
+	private String id;
 	private String title;
 	private String description;
 	private LocalDate dueDate;
 	private StatusTask status;
-	private Long userId;
+	private String userId;
 	
 
 	public Task() {}
 
-	public Task(Long id, String title, String description, LocalDate dueDate, StatusTask status, Long userId) {
+	public Task(String id, String title, String description, LocalDate dueDate, StatusTask status, String userId) {
 		this.cannotBeNull(id, "id");
 		this.cannotBeBlank(title, "title");
 		this.cannotBeInThePast(dueDate);
@@ -29,7 +29,7 @@ public class Task {
         this.userId = userId;
     }
 	
-	public Task(String title, String description, LocalDate dueDate, Long userId) {
+	public Task(String title, String description, LocalDate dueDate, String userId) {
 		this.cannotBeBlank(title, "title");
 		this.cannotBeInThePast(dueDate);
 		this.cannotBeNull(userId, "userId");
@@ -77,11 +77,7 @@ public class Task {
 			throw new IllegalArgumentException("Cannot be blank: " + fieldName);
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -101,7 +97,7 @@ public class Task {
 		return status;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 

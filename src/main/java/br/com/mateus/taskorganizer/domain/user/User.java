@@ -6,11 +6,11 @@ import java.util.List;
 
 public class User {
 	
-	private Long id;
+	private String id;
 	private String login;
 	private String password;
 	private UserRole role;
-	private List<Long> taskIds = new ArrayList<>();
+	private List<String> taskIds = new ArrayList<>();
 	
 	
 	public User(String login, String password, UserRole role) {
@@ -19,7 +19,7 @@ public class User {
 		this.role = role;
 	}
 
-    public User(Long id, String login, String password, UserRole role, List<Long> taskIds) {
+    public User(String id, String login, String password, UserRole role, List<String> taskIds) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -31,7 +31,7 @@ public class User {
 		return this.role;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -43,7 +43,17 @@ public class User {
 		return password;
 	}
 
-	public List<Long> getTaskIds() {
+	public List<String> getTaskIds() {
 		return taskIds;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id='" + id + '\'' +
+				", login='" + login + '\'' +
+				", role=" + role +
+				", taskIds=" + taskIds +
+				'}';
 	}
 }
