@@ -11,7 +11,7 @@ public class ReadTaskByIdAndUserId {
         this.repository = repository;
     }
 
-    public Task getTaskByIdAndUserId(Long taskId, Long userId) {
+    public Task getTaskByIdAndUserId(String taskId, String userId) {
         return this.repository.getTaskByIdAndUserId(taskId, userId);
     }
 }

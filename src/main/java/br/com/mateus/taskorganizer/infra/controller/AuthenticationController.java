@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +24,13 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
-	
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private TokenService tokenService;
+	@Autowired
+	private PasswordEncoder encoder;
 
 	// use cases
 	@Autowired
@@ -38,9 +40,14 @@ public class AuthenticationController {
 	
 	
 	@PostMapping("/login")
-	public ResponseEntity<AuthenticationResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
-		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-		Authentication auth = this.authenticationManager.authenticate(usernamePassword);
+	public ResponseEntity<AuthenticationResponseDTO> login(
+		@RequestBody @Valid AuthenticationDTO data
+	) {
+		var usernamePassword = new UsernamePasswordAuthenticationToken(
+			data.login(), data.password()
+		);
+		Authentication auth = 
+			this.authenticationManager.authenticate(usernamePassword);
 
 		var token = tokenService.generateToken((UserEntity) auth.getPrincipal());
 		
@@ -48,10 +55,12 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<Void> register(@RequestBody @Valid AuthenticationDTO data) {
+	public ResponseEntity<Void> register(
+		@RequestBody @Valid AuthenticationDTO data
+	) {
 		this.checkIfUserAlreadyExists(data.login());
-		
-		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+
+		String encryptedPassword = encoder.encode(data.password());
 		User newUser = new User(data.login(), encryptedPassword, UserRole.USER);
 		
 		saveUser.registerUser(newUser);
@@ -60,10 +69,12 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/admin/register")
-	public ResponseEntity<Void> adminRegister(@RequestBody @Valid AuthenticationDTO data) {
+	public ResponseEntity<Void> adminRegister(
+		@RequestBody @Valid AuthenticationDTO data
+	) {
 		this.checkIfUserAlreadyExists(data.login());
 		
-		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+		String encryptedPassword = encoder.encode(data.password());
 		User newUser = new User(data.login(), encryptedPassword, UserRole.ADMIN);
 		
 		saveUser.registerUser(newUser);
@@ -71,9 +82,8 @@ public class AuthenticationController {
 		return ResponseEntity.ok().build();
 	}
 
-	private ResponseEntity<Void> checkIfUserAlreadyExists(String username) {
+	private void checkIfUserAlreadyExists(String username) {
 		if(this.existsByLogin.existsByLogin(username)) 
-			return ResponseEntity.badRequest().build();
-		return null;
+			throw new IllegalArgumentException("Login unavailable");
 	}
 }

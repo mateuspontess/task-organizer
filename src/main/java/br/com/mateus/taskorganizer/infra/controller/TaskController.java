@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +25,8 @@ import br.com.mateus.taskorganizer.application.usecases.task.RemoveTaskByIdAndUs
 import br.com.mateus.taskorganizer.application.usecases.task.SaveTask;
 import br.com.mateus.taskorganizer.application.usecases.task.UpdateTask;
 import br.com.mateus.taskorganizer.domain.task.Task;
-import br.com.mateus.taskorganizer.utils.SecurityUtils;
+import br.com.mateus.taskorganizer.infra.persistence.user.UserEntity;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
@@ -47,37 +48,78 @@ public class TaskController {
 	
 	@Transactional
 	@PostMapping
-	public ResponseEntity<TaskResponseDTO> registerTask(@RequestBody @Valid TaskCreateDTO dto, UriComponentsBuilder uriBuilder) {
-		Task task = new Task(dto.title(), dto.description(), dto.dueDate(), SecurityUtils.getUserId());
+	public ResponseEntity<TaskResponseDTO> registerTask(
+		@RequestBody @Valid TaskCreateDTO dto, 
+		UriComponentsBuilder uriBuilder,
+		Authentication auth
+	) {
+		UserEntity currentUser = (UserEntity) auth.getPrincipal();
+		Task task = new Task(
+			dto.title(), 
+			dto.description(), 
+			dto.dueDate(), 
+			currentUser.getId()
+		);
 		task = createTask.registerTask(task);
 		
-		var uri = uriBuilder.path("/tasks/{id}").buildAndExpand(task.getId()).toUri();
+		var uri = uriBuilder.path("/tasks/{id}")
+			.buildAndExpand(task.getId())
+			.toUri();
 		
 		return ResponseEntity.created(uri).body(new TaskResponseDTO(task));
 	}
 
 	@GetMapping
-	public ResponseEntity<List<TaskResponseDTO>> listTasks() {
-		return ResponseEntity.ok(readAllTasksByUserId.getAllTasksByUserId(SecurityUtils.getUserId()).stream()
-			.map(TaskResponseDTO::new)
-			.toList());
+	public ResponseEntity<List<TaskResponseDTO>> listTasks(Authentication auth) {
+		UserEntity currentUser = (UserEntity) auth.getPrincipal();
+
+		return ResponseEntity.ok(
+			readAllTasksByUserId.getAllTasksByUserId(currentUser.getId())
+				.stream()
+					.map(TaskResponseDTO::new)
+					.toList());
 	}
 	
 	@GetMapping("/{taskId}")
-	public ResponseEntity<TaskResponseDTO> showTask(@PathVariable Long taskId) {
-		return ResponseEntity.ok(new TaskResponseDTO(readTaskByIdAndUserId.getTaskByIdAndUserId(taskId, SecurityUtils.getUserId())));
+	public ResponseEntity<TaskResponseDTO> showTask(
+		@PathVariable String taskId,
+		Authentication auth
+	) {
+		UserEntity currentUser = (UserEntity) auth.getPrincipal();
+		return ResponseEntity.ok(
+			new TaskResponseDTO(
+				readTaskByIdAndUserId.getTaskByIdAndUserId(
+					taskId, 
+					currentUser.getId()
+				)
+			)
+		);
 	}
 	
 	@Transactional
 	@PutMapping("/{taskId}")
-	public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long taskId, @RequestBody TaskUpdateDTO dto) {
-		return ResponseEntity.ok(new TaskResponseDTO(updateTask.updateTaskData(taskId, SecurityUtils.getUserId(), dto)));
+	public ResponseEntity<TaskResponseDTO> updateTask(
+		@PathVariable String taskId, 
+		@RequestBody TaskUpdateDTO dto,
+		Authentication auth
+	) {
+		UserEntity currentUser = (UserEntity) auth.getPrincipal();
+		return ResponseEntity.ok(
+			new TaskResponseDTO(
+				updateTask.updateTaskData(taskId, currentUser.getId(), dto)));
 	}
 	
 	@Transactional
 	@DeleteMapping("/{taskId}")
-	public ResponseEntity<TaskResponseDTO> removeTask(@PathVariable Long taskId) {
-		removeTaskByIdAndUserId.deleteTaskByIdAndUserId(taskId, SecurityUtils.getUserId());
+	public ResponseEntity<TaskResponseDTO> removeTask(
+		@PathVariable String taskId,
+		Authentication auth
+	) {
+		UserEntity currentUser = (UserEntity) auth.getPrincipal();
+		removeTaskByIdAndUserId.deleteTaskByIdAndUserId(
+			taskId, 
+			currentUser.getId()
+		);
 		return ResponseEntity.noContent().build();
 	}
 }

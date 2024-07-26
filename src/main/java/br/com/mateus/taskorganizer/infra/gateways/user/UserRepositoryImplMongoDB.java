@@ -3,15 +3,18 @@ package br.com.mateus.taskorganizer.infra.gateways.user;
 import br.com.mateus.taskorganizer.application.gateways.UserRepository;
 import br.com.mateus.taskorganizer.domain.user.User;
 import br.com.mateus.taskorganizer.infra.persistence.user.UserEntity;
-import br.com.mateus.taskorganizer.infra.persistence.user.UserRepositoryJPA;
+import br.com.mateus.taskorganizer.infra.persistence.user.UserRepositoryMongoDB;
 
-public class UserRepositoryImplJPA implements UserRepository {
+public class UserRepositoryImplMongoDB implements UserRepository {
 
-    private final UserRepositoryJPA repositoryJPA;
+    private final UserRepositoryMongoDB repositoryMongoDB;
     private final UserEntityMapper mapper;
 
-    public UserRepositoryImplJPA(UserRepositoryJPA repositoryJPA, UserEntityMapper mapper) {
-        this.repositoryJPA = repositoryJPA;
+    public UserRepositoryImplMongoDB(
+        UserRepositoryMongoDB mongoRepository, 
+        UserEntityMapper mapper
+    ) {
+        this.repositoryMongoDB = mongoRepository;
         this.mapper = mapper;
     }
 
@@ -19,14 +22,14 @@ public class UserRepositoryImplJPA implements UserRepository {
     @Override
     public User registerUser(User user) {
         UserEntity entity = mapper.toEntity(user);
-        repositoryJPA.save(entity);
+        repositoryMongoDB.save(entity);
 
         return mapper.toUser(entity);
     }
 
     @Override
     public User getUserByLogin(String username) {
-        UserEntity entity = repositoryJPA.findByLogin(username);
+        UserEntity entity = repositoryMongoDB.findByLogin(username);
         
         return mapper.toUser(entity);
     }
@@ -34,6 +37,6 @@ public class UserRepositoryImplJPA implements UserRepository {
 
     @Override
     public boolean existsByLogin(String login) {
-        return this.repositoryJPA.existsByLogin(login);
+        return this.repositoryMongoDB.existsByLogin(login);
     }
 }

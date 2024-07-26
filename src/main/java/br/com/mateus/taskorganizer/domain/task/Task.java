@@ -4,19 +4,26 @@ import java.time.LocalDate;
 
 public class Task {
 
-	private Long id;
+	private String id;
 	private String title;
 	private String description;
 	private LocalDate dueDate;
 	private StatusTask status;
-	private Long userId;
+	private String userId;
 	
 
 	public Task() {}
 
-	public Task(Long id, String title, String description, LocalDate dueDate, StatusTask status, Long userId) {
+	public Task(
+		String id, 
+		String title, 
+		String description, 
+		LocalDate dueDate, 
+		StatusTask status, 
+		String userId
+	) {
 		this.cannotBeNull(id, "id");
-		this.cannotBeNullOrBlank(title, "title");
+		this.cannotBeBlank(title, "title");
 		this.cannotBeInThePast(dueDate);
 		this.cannotBeNull(status, "status");
 		this.cannotBeNull(userId, "userId");
@@ -29,8 +36,13 @@ public class Task {
         this.userId = userId;
     }
 	
-	public Task(String title, String description, LocalDate dueDate, Long userId) {
-		this.cannotBeNullOrBlank(title, "title");
+	public Task(
+		String title, 
+		String description, 
+		LocalDate dueDate, 
+		String userId
+	) {
+		this.cannotBeBlank(title, "title");
 		this.cannotBeInThePast(dueDate);
 		this.cannotBeNull(userId, "userId");
 
@@ -41,7 +53,12 @@ public class Task {
 		this.status = StatusTask.PENDING;
 	}
 	
-	public void updateTask(String title, String description, LocalDate dueDatee, StatusTask status) {
+	public void updateTask(
+		String title, 
+		String description, 
+		LocalDate dueDatee, 
+		StatusTask status
+	) {
 		if (title != null && !title.isBlank())
 			this.title = title;
 		
@@ -71,21 +88,13 @@ public class Task {
 		if (field == null)
 			throw new IllegalArgumentException("Cannot be null: " + fieldName);
 	}
-	private void cannotBeNullOrBlank(String field, String fieldName) {
+	private void cannotBeBlank(String field, String fieldName) {
 		this.cannotBeNull(field, fieldName);
 		if (field.isBlank())
 			throw new IllegalArgumentException("Cannot be blank: " + fieldName);
 	}
-	private void cannotBeBlank(String field, String fieldName) {
-		if (field != null && field.isBlank())
-			throw new IllegalArgumentException("Cannot be blank: " + fieldName);
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -105,7 +114,19 @@ public class Task {
 		return status;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
+
+    @Override
+    public String toString() {
+        return "Task[" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", dueDate=" + dueDate +
+                ", status=" + status +
+                ", userId=" + userId +
+                ']';
+    }
 }

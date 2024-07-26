@@ -4,14 +4,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import br.com.mateus.taskorganizer.application.gateways.TaskRepository;
-import br.com.mateus.taskorganizer.application.usecases.task.SaveTask;
-import br.com.mateus.taskorganizer.application.usecases.task.UpdateTask;
-import br.com.mateus.taskorganizer.infra.gateways.task.TaskEntityMapper;
-import br.com.mateus.taskorganizer.infra.gateways.task.TaskRepositoryImplJPA;
-import br.com.mateus.taskorganizer.infra.persistence.task.TaskRepositoryJPA;
 import br.com.mateus.taskorganizer.application.usecases.task.ReadAllTasksByUserId;
 import br.com.mateus.taskorganizer.application.usecases.task.ReadTaskByIdAndUserId;
 import br.com.mateus.taskorganizer.application.usecases.task.RemoveTaskByIdAndUserId;
+import br.com.mateus.taskorganizer.application.usecases.task.SaveTask;
+import br.com.mateus.taskorganizer.application.usecases.task.UpdateTask;
+import br.com.mateus.taskorganizer.infra.gateways.task.TaskEntityMapper;
+import br.com.mateus.taskorganizer.infra.gateways.task.TaskRepositoryImplMongoDB;
+import br.com.mateus.taskorganizer.infra.persistence.task.TaskRepositoryMongoDB;
 
 @Configuration
 public class TaskPersistenceConfig {
@@ -22,8 +22,11 @@ public class TaskPersistenceConfig {
     }
 
     @Bean
-    TaskRepositoryImplJPA getTaskRepository(TaskRepositoryJPA repository, TaskEntityMapper entityMapper) {
-        return new TaskRepositoryImplJPA(repository, entityMapper);
+    TaskRepository getTaskRepository(
+        TaskRepositoryMongoDB repository, 
+        TaskEntityMapper entityMapper
+    ) {
+        return new TaskRepositoryImplMongoDB(repository, entityMapper);
     }
 
     @Bean

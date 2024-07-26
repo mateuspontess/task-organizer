@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import br.com.mateus.taskorganizer.domain.task.StatusTask;
 import br.com.mateus.taskorganizer.domain.task.Task;
@@ -13,17 +14,28 @@ public class TaskUtils {
     private static Random random = new Random();
     
 
-    public static Task getRandomDefaultTaskWithoutId() {
-        return getRandomTaskWithouId(null, null, null, null, null);
+    public static Task getRandomTask() {
+        Task task = getTaskOrRandom(null, null, null, null, null, null);
+        return task;
     }
-    public static Task getRandomTaskWithouId(String title, String description, LocalDate dueDate, StatusTask status, Long userId) {
+    public static Task getRandomTaskWithoutId() {
+        Task task = getTaskOrRandom(null, null, null, null, null, null);
+        return task;
+    }
+    public static Task getRandomTaskWithoutId(String id, String title, String description, LocalDate dueDate, StatusTask status, String userId) {
+        Task task = getTaskOrRandom(null, null, null, null, null, userId);
+        ReflectionTestUtils.setField(task, "id", null);
+        return task;
+    }
+    public static Task getTaskOrRandom(String id, String title, String description, LocalDate dueDate, StatusTask status, String userId) {
+        id = paramOrDefaultString(id);
         title = paramOrDefaultString(title);
         description = paramOrDefaultString(description);
         dueDate = paramOrDefaultDate(dueDate);
         status = paramOrDefaultStatus(status);
-        userId = paramOrDefaultLong(userId);
+        userId = paramOrDefaultString(userId);
 
-        return createTask(null, title, description, dueDate, status, userId);
+        return createTask(id, title, description, dueDate, status, userId);
     }
 
     private static LocalDate paramOrDefaultDate(LocalDate date) {
@@ -35,24 +47,21 @@ public class TaskUtils {
     private static StatusTask paramOrDefaultStatus(StatusTask status) {
         return status == null ? getRandomStatus() : status;
     }
-    private static Long paramOrDefaultLong(Long number) {
-        return number == null ? 1L : number;
-    }
 
-	private static Task createTask(Long taskId, String title, String description, LocalDate dueDate, StatusTask status, Long userId) {
+	private static Task createTask(String taskId, String title, String description, LocalDate dueDate, StatusTask status, String userId) {
         return new TaskBuilder()
             .id(taskId)
             .title(title)
             .description(description)
             .dueDate(dueDate)
             .status(StatusTask.PENDING)
-            .userId(1L)
+            .userId(userId)
             .build();
     }
 
-    private static int getRandomInt() {
-        return random.nextInt(100);
-    }
+    // private static int getRandomInt() {
+    //     return random.nextInt(100);
+    // }
     public static String getRandomString() {
         return RandomStringUtils.randomAlphabetic(5);
     }

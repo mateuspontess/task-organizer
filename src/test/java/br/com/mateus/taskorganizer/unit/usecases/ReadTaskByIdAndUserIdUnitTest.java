@@ -2,10 +2,8 @@ package br.com.mateus.taskorganizer.unit.usecases;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-
-import java.util.Random;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,18 +25,17 @@ class ReadTaskByIdAndUserIdUnitTest {
 
 	@InjectMocks 
 	private ReadTaskByIdAndUserId readTaskByIdAndUserId;
-	private final Random random = new Random();
 
-	
+    
 	@Test
 	@DisplayName("Should return a list of TaskResponseDTO with correct attributes")
 	void listTasksTest() {
 	    // arrange
-		Task taskMock = TaskUtils.getRandomDefaultTaskWithoutId();
-		when(repository.getTaskByIdAndUserId(anyLong(), anyLong())).thenReturn(taskMock);
+		Task taskMock = TaskUtils.getRandomTaskWithoutId();
+		when(repository.getTaskByIdAndUserId(anyString(), anyString())).thenReturn(taskMock);
 	    
 	    // act
-	    Task result = readTaskByIdAndUserId.getTaskByIdAndUserId(random.nextLong(), random.nextLong());
+	    Task result = readTaskByIdAndUserId.getTaskByIdAndUserId(TaskUtils.getRandomString(), TaskUtils.getRandomString());
 	    
 	    // assert
 	    assertNotNull(result, "The result should not be null");
