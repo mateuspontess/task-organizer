@@ -3,12 +3,11 @@ package br.com.mateus.taskorganizer.unit.usecases;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +30,6 @@ class ReadAllTasksByUserIdUnitTest {
 
 	@InjectMocks 
 	private ReadAllTasksByUserId readAllTasksByUserId;
-	private final Random random = new Random();
 	
 	
 	@Test
@@ -39,13 +37,13 @@ class ReadAllTasksByUserIdUnitTest {
 	void listTasksTest() {
 	    // arrange
 	    List<Task> tasks = List.of(
-			TaskUtils.getRandomDefaultTaskWithoutId(),
-			TaskUtils.getRandomDefaultTaskWithoutId()
+			TaskUtils.getRandomTask(),
+			TaskUtils.getRandomTask()
 	    );
-	    when(repository.getAllTasksByUserId(anyLong())).thenReturn(tasks);
+	    when(repository.getAllTasksByUserId(anyString())).thenReturn(tasks);
 	    
 	    // act
-	    List<Task> result = readAllTasksByUserId.getAllTasksByUserId(random.nextLong());
+	    List<Task> result = readAllTasksByUserId.getAllTasksByUserId(TaskUtils.getRandomString());
 	    
 	    // assert
 	    assertNotNull(result, "The result list should not be null");

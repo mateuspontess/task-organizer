@@ -4,21 +4,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mateus.taskorganizer.application.dto.user.input.AuthenticationDTO;
 import br.com.mateus.taskorganizer.application.usecases.user.SaveUser;
@@ -26,13 +24,9 @@ import br.com.mateus.taskorganizer.domain.user.User;
 import br.com.mateus.taskorganizer.domain.user.UserRole;
 import br.com.mateus.taskorganizer.infra.persistence.user.UserEntity;
 import br.com.mateus.taskorganizer.infra.security.TokenService;
-import jakarta.transaction.Transactional;
+import br.com.mateus.taskorganizer.integration.config.ControllerE2ETest;
 
-@SpringBootTest
-@AutoConfigureWebMvc
-@AutoConfigureMockMvc
-@AutoConfigureJsonTesters
-@AutoConfigureTestDatabase
+@ControllerE2ETest
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class AuthenticationControllerTest {
 
@@ -52,6 +46,12 @@ public class AuthenticationControllerTest {
     static void setup(@Autowired SaveUser saveUser, @Autowired TokenService tokenService) {
         TOKEN = TOKEN + tokenService.generateToken(new UserEntity(user));
         saveUser.registerUser(user);
+    }
+
+    @AfterAll
+    static void clean(@Autowired MongoTemplate template) {
+        var collections = template.getCollectionNames();
+        collections.forEach(collection -> template.dropCollection(collection));
     }
 
 

@@ -7,14 +7,14 @@ import br.com.mateus.taskorganizer.domain.task.Task;
 
 public class TaskBuilder {
 
-	private Long id;
+	private String id;
 	private String title;
 	private String description;
 	private LocalDate dueDate;
 	private StatusTask status;
-	private Long userId;
+	private String userId;
 	
-	public TaskBuilder id(Long id) {
+	public TaskBuilder id(String id) {
 		this.id = id;
 		return this;
 	}
@@ -34,14 +34,13 @@ public class TaskBuilder {
 		this.status = status;
 		return this;
 	}
-	public TaskBuilder userId(Long userId) {
+	public TaskBuilder userId(String userId) {
 		this.userId = userId;
 		return this;
 	}
 	
 	public Task build() {
-		Task task = new Task(this.title, this.description, this.dueDate, this.userId);
-		task.setId(this.id);
+		Task task = new Task(this.id, this.title, this.description, this.dueDate, this.status, this.userId);
 		return task;
 	}
 }

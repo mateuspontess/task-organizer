@@ -3,7 +3,7 @@ package br.com.mateus.taskorganizer.unit.usecases;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -36,13 +36,13 @@ class UpdateTaskUnitTest {
 	@DisplayName("Should return a list of TaskResponseDTO with correct attributes")
 	void listTasksTest() {
 	    // arrange
-		Task taskMock = TaskUtils.getRandomDefaultTaskWithoutId();
-		when(repository.getTaskByIdAndUserId(anyLong(), anyLong())).thenReturn(taskMock);
+		Task taskMock = TaskUtils.getRandomTaskWithoutId();
+		when(repository.getTaskByIdAndUserId(anyString(), anyString())).thenReturn(taskMock);
 		when(repository.saveTask(any())).thenReturn(taskMock);
 	    
 	    // act
-		Long ficTaskId = 1L;
-		Long ficUserId = 1L; 
+		String ficTaskId = TaskUtils.getRandomString();
+		String ficUserId = TaskUtils.getRandomString(); 
 		TaskUpdateDTO dto = new TaskUpdateDTO("updated", "updated", LocalDate.now().plusDays(20), StatusTask.CONCLUDED);
 	    Task result = updateTask.updateTaskData(ficTaskId, ficUserId, dto);
 	    

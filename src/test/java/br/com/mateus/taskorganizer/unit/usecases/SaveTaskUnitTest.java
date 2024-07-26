@@ -31,7 +31,7 @@ class SaveTaskUnitTest {
 	@DisplayName("Should return a list of TaskResponseDTO with correct attributes")
 	void listTasksTest() {
 	    // arrange
-		Task taskMock = TaskUtils.getRandomDefaultTaskWithoutId();
+		Task taskMock = TaskUtils.getRandomTaskWithoutId();
 		when(repository.saveTask(any())).thenReturn(taskMock);
 	    
 	    // act

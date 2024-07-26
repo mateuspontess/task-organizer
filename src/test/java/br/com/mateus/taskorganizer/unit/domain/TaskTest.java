@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import br.com.mateus.taskorganizer.domain.task.StatusTask;
 import br.com.mateus.taskorganizer.domain.task.Task;
+import br.com.mateus.taskorganizer.tests_utils.TaskUtils;
 
 class TaskTest {
 
@@ -26,57 +27,57 @@ class TaskTest {
 	@DisplayName("All args constructor - Should throw IllegalArgumentException if attribute 'title' is invalid")
 	void testConstructorWithAllFields() {
 		assertThrows(IllegalArgumentException.class,
-			() -> new Task(null, "title", "description", LocalDate.now(), StatusTask.PENDING, random.nextLong()),
+			() -> new Task(null, "title", "description", LocalDate.now(), StatusTask.PENDING, TaskUtils.getRandomString()),
 			"Expected IllegalArgumentException to be thrown when id is null");
 
 		assertThrows(IllegalArgumentException.class,
-			() -> new Task(random.nextLong(), "", "description", LocalDate.now(), StatusTask.PENDING, random.nextLong()),
+			() -> new Task(TaskUtils.getRandomString(), "", "description", LocalDate.now(), StatusTask.PENDING, TaskUtils.getRandomString()),
 			"Expected IllegalArgumentException to be thrown when blank is null");
 		assertThrows(IllegalArgumentException.class,
-			() -> new Task(random.nextLong(), null, "description", LocalDate.now(), StatusTask.PENDING, random.nextLong()),
+			() -> new Task(TaskUtils.getRandomString(), null, "description", LocalDate.now(), StatusTask.PENDING, TaskUtils.getRandomString()),
 			"Expected IllegalArgumentException to be thrown when title is null");
 
 		assertDoesNotThrow(
-			() -> new Task(random.nextLong(), "title", "", LocalDate.now(), StatusTask.PENDING, random.nextLong()),
+			() -> new Task(TaskUtils.getRandomString(), "title", "", LocalDate.now(), StatusTask.PENDING, TaskUtils.getRandomString()),
 			"No exception should be thrown when description is null");
 		assertDoesNotThrow(
-			() -> new Task(random.nextLong(), "title", null, LocalDate.now(), StatusTask.PENDING, random.nextLong()),
+			() -> new Task(TaskUtils.getRandomString(), "title", null, LocalDate.now(), StatusTask.PENDING, TaskUtils.getRandomString()),
 			"No exception should be thrown when description is blank");
 
 		assertDoesNotThrow(
-			() -> new Task(random.nextLong(), "title", "description", null, StatusTask.PENDING, random.nextLong()),
+			() -> new Task(TaskUtils.getRandomString(), "title", "description", null, StatusTask.PENDING, TaskUtils.getRandomString()),
 			"No exception should be thrown when dueDate is null");
 		assertThrows(IllegalArgumentException.class,
-			() -> new Task(random.nextLong(), "title", "description", PAST, StatusTask.PENDING, random.nextLong()),
+			() -> new Task(TaskUtils.getRandomString(), "title", "description", PAST, StatusTask.PENDING, TaskUtils.getRandomString()),
 			"Expected IllegalArgumentException to be thrown when dueDate is in the past");
 
 		assertThrows(IllegalArgumentException.class,
-			() -> new Task(random.nextLong(), "title", "description", LocalDate.now(), null, random.nextLong()),
+			() -> new Task(TaskUtils.getRandomString(), "title", "description", LocalDate.now(), null, TaskUtils.getRandomString()),
 			"Expected IllegalArgumentException to be thrown when status is null");
 
 		assertThrows(IllegalArgumentException.class,
-			() -> new Task(random.nextLong(), "title", "description", LocalDate.now(), StatusTask.PENDING, null),
+			() -> new Task(TaskUtils.getRandomString(), "title", "description", LocalDate.now(), StatusTask.PENDING, null),
 			"Expected IllegalArgumentException to be thrown when userId is null");
 	}
 	@Test
 	@DisplayName("Required fields constructor - Should throw IllegalArgumentException if attributes is invalid")
 	void testConstructorWithRequiredFields() {
 		assertThrows(IllegalArgumentException.class,
-			() -> new Task(null, "description", LocalDate.now(), random.nextLong()),
+			() -> new Task(null, "description", LocalDate.now(), TaskUtils.getRandomString()),
 			"Expected IllegalArgumentException to be thrown when title is null");
 		assertThrows(IllegalArgumentException.class,
-			() -> new Task("", "description", LocalDate.now(), random.nextLong()),
+			() -> new Task("", "description", LocalDate.now(), TaskUtils.getRandomString()),
 			"Expected IllegalArgumentException to be thrown when title is blank");
 
-		assertDoesNotThrow( () -> new Task("title", "", LocalDate.now(), random.nextLong()),
+		assertDoesNotThrow( () -> new Task("title", "", LocalDate.now(), TaskUtils.getRandomString()),
 			"No exception should be thrown when description is blank");
-		assertDoesNotThrow( () -> new Task("title", null, LocalDate.now(), random.nextLong()),
+		assertDoesNotThrow( () -> new Task("title", null, LocalDate.now(), TaskUtils.getRandomString()),
 			"No exception should be thrown when description is null");
 
-		assertDoesNotThrow(() -> new Task("title", "description", null, random.nextLong()),
+		assertDoesNotThrow(() -> new Task("title", "description", null, TaskUtils.getRandomString()),
 			"No exception should be thrown when dueDate is null");
 		assertThrows(IllegalArgumentException.class,
-			() -> new Task("title", "description", LocalDate.now().minusDays(10), random.nextLong()),
+			() -> new Task("title", "description", LocalDate.now().minusDays(10), TaskUtils.getRandomString()),
 			"Expected IllegalArgumentException to be thrown when dueDate is in the past");
 
 		assertThrows(IllegalArgumentException.class,
@@ -175,6 +176,6 @@ class TaskTest {
 	}
 
 	private Task getValidTask() {
-		return new Task("Title", "description", LocalDate.now(), random.nextLong());
+		return new Task("Title", "description", LocalDate.now(), TaskUtils.getRandomString());
 	}
 }

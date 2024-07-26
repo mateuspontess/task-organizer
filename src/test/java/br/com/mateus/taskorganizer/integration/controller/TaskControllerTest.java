@@ -9,15 +9,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
@@ -25,6 +22,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mateus.taskorganizer.application.dto.task.input.TaskCreateDTO;
 import br.com.mateus.taskorganizer.application.dto.task.input.TaskUpdateDTO;
@@ -36,14 +34,10 @@ import br.com.mateus.taskorganizer.domain.user.User;
 import br.com.mateus.taskorganizer.domain.user.UserRole;
 import br.com.mateus.taskorganizer.infra.persistence.user.UserEntity;
 import br.com.mateus.taskorganizer.infra.security.TokenService;
+import br.com.mateus.taskorganizer.integration.config.ControllerE2ETest;
 import br.com.mateus.taskorganizer.tests_utils.TaskUtils;
-import jakarta.transaction.Transactional;
 
-@SpringBootTest
-@AutoConfigureWebMvc
-@AutoConfigureMockMvc
-@AutoConfigureJsonTesters
-@AutoConfigureTestDatabase
+@ControllerE2ETest
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class TaskControllerTest {
 
@@ -59,13 +53,13 @@ public class TaskControllerTest {
     private final static LocalDate INVALID_DATE = LocalDate.now().minusDays(20);
 
     private final static String PASSWORD = "password";
-    private final static User user = new User("login", new BCryptPasswordEncoder().encode(PASSWORD), UserRole.ADMIN);
+    private static User user = new User("taskControllerTest", new BCryptPasswordEncoder().encode(PASSWORD), UserRole.ADMIN);
     
     private final String baseURL = "/tasks";
     private static String TOKEN = "Bearer ";
     
-    private static Task task1 = TaskUtils.getRandomDefaultTaskWithoutId();
-    private static Task task2 = TaskUtils.getRandomDefaultTaskWithoutId();
+    private static Task task1 = TaskUtils.getRandomTaskWithoutId();
+    private static Task task2 = TaskUtils.getRandomTaskWithoutId();
     
     @BeforeAll
     @Transactional
@@ -76,9 +70,22 @@ public class TaskControllerTest {
         ) {
         TOKEN = TOKEN + tokenService.generateToken(new UserEntity(user));
 
-        saveUser.registerUser(user);
-        saveTask.registerTask(task1);
-        saveTask.registerTask(task2);
+        user = saveUser.registerUser(user);
+        // task1 = saveTask.registerTask(task1);
+        // task2 = saveTask.registerTask(task2);
+        // var task3 = TaskUtils.getRandomTaskWithoutId(null, null, null, null, null, user.getId());
+        System.out.println("TASKID USUARIO: " + user);
+        task1 = TaskUtils.getRandomTaskWithoutId(null, null, null, null, null, user.getId());
+        task2 = TaskUtils.getRandomTaskWithoutId(null, null, null, null, null, user.getId());
+        
+        task1 = saveTask.registerTask(task1);
+        task2 = saveTask.registerTask(task2);
+    }
+
+    @AfterAll
+    static void clean(@Autowired MongoTemplate template) {
+        var collections = template.getCollectionNames();
+        collections.forEach(collection -> template.dropCollection(collection));
     }
 
 
@@ -144,7 +151,7 @@ public class TaskControllerTest {
 
     @Test
     void showTaskTest() throws Exception {
-        this.getRequest(this.baseURL + "/1")
+        this.getRequest(this.baseURL + "/" + task1.getId())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").exists())
             .andExpect(jsonPath("$.title").exists())
@@ -159,7 +166,7 @@ public class TaskControllerTest {
         TaskUpdateDTO requestBody = new TaskUpdateDTO("update", "update", VALID_DATE.plusDays(1), StatusTask.CONCLUDED);
 
         // act and assert
-        this.putRequest(this.baseURL + "/1", taskUpdateDTOJson.write(requestBody).getJson())
+        this.putRequest(this.baseURL + "/" + task1.getId(), taskUpdateDTOJson.write(requestBody).getJson())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.title").value(requestBody.title()))
             .andExpect(jsonPath("$.description").value(requestBody.description()))
@@ -173,10 +180,10 @@ public class TaskControllerTest {
         TaskUpdateDTO requestBodyFullNull = new TaskUpdateDTO(null, null, null, null);
 
         // act and assert
-        this.putRequest(this.baseURL + "/1", taskUpdateDTOJson.write(requestBodyWithBlank).getJson())
+        this.putRequest(this.baseURL + "/" + task1.getId(), taskUpdateDTOJson.write(requestBodyWithBlank).getJson())
             .andExpect(status().isOk());
 
-        this.putRequest(this.baseURL + "/1", taskUpdateDTOJson.write(requestBodyFullNull).getJson())
+        this.putRequest(this.baseURL + "/" + task1.getId(), taskUpdateDTOJson.write(requestBodyFullNull).getJson())
             .andExpect(status().isOk());
     }
     @Test
@@ -186,14 +193,14 @@ public class TaskControllerTest {
         TaskUpdateDTO requestBodyFullNull = new TaskUpdateDTO(null, null, null, null);
 
         // act and assert
-        this.putRequest(this.baseURL + "/1", taskUpdateDTOJson.write(requestBodyWithBlank).getJson())
+        this.putRequest(this.baseURL + "/" + task1.getId(), taskUpdateDTOJson.write(requestBodyWithBlank).getJson())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.title").isNotEmpty())
             .andExpect(jsonPath("$.description").isNotEmpty())
             .andExpect(jsonPath("$.dueDate").isNotEmpty())
             .andExpect(jsonPath("$.status").isNotEmpty());
 
-        this.putRequest(this.baseURL + "/1", taskUpdateDTOJson.write(requestBodyFullNull).getJson())
+        this.putRequest(this.baseURL + "/" + task1.getId(), taskUpdateDTOJson.write(requestBodyFullNull).getJson())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.title").isNotEmpty())
             .andExpect(jsonPath("$.description").isNotEmpty())
@@ -205,7 +212,7 @@ public class TaskControllerTest {
     @Rollback
     void deleteTaskTest() throws Exception {
         mvc.perform(
-            delete(this.baseURL + "/1")
+            delete(this.baseURL + "/" + task2.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", TOKEN)
             )
