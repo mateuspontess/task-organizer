@@ -54,10 +54,17 @@ public class TaskController {
 		Authentication auth
 	) {
 		UserEntity currentUser = (UserEntity) auth.getPrincipal();
-		Task task = new Task(dto.title(), dto.description(), dto.dueDate(), currentUser.getId());
+		Task task = new Task(
+			dto.title(), 
+			dto.description(), 
+			dto.dueDate(), 
+			currentUser.getId()
+		);
 		task = createTask.registerTask(task);
 		
-		var uri = uriBuilder.path("/tasks/{id}").buildAndExpand(task.getId()).toUri();
+		var uri = uriBuilder.path("/tasks/{id}")
+			.buildAndExpand(task.getId())
+			.toUri();
 		
 		return ResponseEntity.created(uri).body(new TaskResponseDTO(task));
 	}
@@ -66,9 +73,11 @@ public class TaskController {
 	public ResponseEntity<List<TaskResponseDTO>> listTasks(Authentication auth) {
 		UserEntity currentUser = (UserEntity) auth.getPrincipal();
 
-		return ResponseEntity.ok(readAllTasksByUserId.getAllTasksByUserId(currentUser.getId()).stream()
-			.map(TaskResponseDTO::new)
-			.toList());
+		return ResponseEntity.ok(
+			readAllTasksByUserId.getAllTasksByUserId(currentUser.getId())
+				.stream()
+					.map(TaskResponseDTO::new)
+					.toList());
 	}
 	
 	@GetMapping("/{taskId}")
@@ -77,7 +86,14 @@ public class TaskController {
 		Authentication auth
 	) {
 		UserEntity currentUser = (UserEntity) auth.getPrincipal();
-		return ResponseEntity.ok(new TaskResponseDTO(readTaskByIdAndUserId.getTaskByIdAndUserId(taskId, currentUser.getId())));
+		return ResponseEntity.ok(
+			new TaskResponseDTO(
+				readTaskByIdAndUserId.getTaskByIdAndUserId(
+					taskId, 
+					currentUser.getId()
+				)
+			)
+		);
 	}
 	
 	@Transactional
@@ -88,7 +104,9 @@ public class TaskController {
 		Authentication auth
 	) {
 		UserEntity currentUser = (UserEntity) auth.getPrincipal();
-		return ResponseEntity.ok(new TaskResponseDTO(updateTask.updateTaskData(taskId, currentUser.getId(), dto)));
+		return ResponseEntity.ok(
+			new TaskResponseDTO(
+				updateTask.updateTaskData(taskId, currentUser.getId(), dto)));
 	}
 	
 	@Transactional
@@ -98,7 +116,10 @@ public class TaskController {
 		Authentication auth
 	) {
 		UserEntity currentUser = (UserEntity) auth.getPrincipal();
-		removeTaskByIdAndUserId.deleteTaskByIdAndUserId(taskId, currentUser.getId());
+		removeTaskByIdAndUserId.deleteTaskByIdAndUserId(
+			taskId, 
+			currentUser.getId()
+		);
 		return ResponseEntity.noContent().build();
 	}
 }

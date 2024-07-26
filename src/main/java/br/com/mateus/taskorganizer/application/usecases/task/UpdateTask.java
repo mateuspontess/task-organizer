@@ -12,9 +12,18 @@ public class UpdateTask {
         this.repository = repository;
     }
 
-    public Task updateTaskData(String taskId, String userId, TaskUpdateDTO updateData) {
+    public Task updateTaskData(
+        String taskId, 
+        String userId, 
+        TaskUpdateDTO updateData
+    ) {
 		Task task = repository.getTaskByIdAndUserId(taskId, userId);
-		task.updateTask(updateData.title(), updateData.description(), updateData.dueDate(), updateData.status());
+		task.updateTask(
+            updateData.title(), 
+            updateData.description(), 
+            updateData.dueDate(), 
+            updateData.status()
+        );
         return this.repository.saveTask(task);
     }
 }

@@ -22,7 +22,7 @@ public class SpringDocConfigurations {
 			.bearerFormat("JWT")))
 			.info(new Info()
 				.title("Task.Organizer API")
-					.description("Rest API of the Task.Organizer application, containing task CRUD functionalities")
+					.description("Rest API of the Task.Organizer application, containing task CRUD functionalities, using the main concepts of Clean Architecture")
 					.contact(new Contact()
 						.name("Mateus Pontes")
 						.email("mateuspsdd@gmail.com")));

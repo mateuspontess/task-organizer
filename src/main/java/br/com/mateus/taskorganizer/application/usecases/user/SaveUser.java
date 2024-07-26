@@ -11,7 +11,7 @@ public class SaveUser {
         this.repository = repository;
     }
 
-    public User registerUser(User user) {
+    public User registerUser(User user) {            
         return this.repository.registerUser(user);
     }
 }

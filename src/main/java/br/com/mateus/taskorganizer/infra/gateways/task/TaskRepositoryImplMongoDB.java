@@ -12,7 +12,10 @@ public class TaskRepositoryImplMongoDB implements TaskRepository{
     private final TaskRepositoryMongoDB repositoryMongoDB;
     private final TaskEntityMapper mapper;
 
-    public TaskRepositoryImplMongoDB(TaskRepositoryMongoDB mongoRepository, TaskEntityMapper mapper) {
+    public TaskRepositoryImplMongoDB(
+        TaskRepositoryMongoDB mongoRepository, 
+        TaskEntityMapper mapper
+    ) {
         this.repositoryMongoDB = mongoRepository;
         this.mapper = mapper;
     } 
@@ -28,13 +31,17 @@ public class TaskRepositoryImplMongoDB implements TaskRepository{
 
     @Override
     public List<Task> getAllTasksByUserId(String id) {
-        return this.mapper.toListTask(this.repositoryMongoDB.findAllByUserId(id));
+        return this.mapper.toListTask(
+            this.repositoryMongoDB.findAllByUserId(id)
+        );
     }
 
     @Override
     public Task getTaskByIdAndUserId(String taskId, String userId) {
         System.out.println("TASKID: " + taskId + ", USERID: " + userId);
-        return this.mapper.toTask(this.repositoryMongoDB.findByIdAndUserId(taskId, userId));
+        return this.mapper.toTask(
+            this.repositoryMongoDB.findByIdAndUserId(taskId, userId)
+        );
     }
 
     @Override

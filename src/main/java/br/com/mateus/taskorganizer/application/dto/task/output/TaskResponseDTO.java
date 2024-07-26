@@ -13,6 +13,12 @@ public record TaskResponseDTO(
 	) {
 	
 	public TaskResponseDTO(Task t) {
-		this(t.getId(), t.getTitle(), t.getDescription(), t.getDueDate(), t.getStatus());
+		this(
+			t.getId(), 
+			t.getTitle(), 
+			t.getDescription(), 
+			t.getDueDate(), 
+			t.getStatus()
+		);
 	}
 }

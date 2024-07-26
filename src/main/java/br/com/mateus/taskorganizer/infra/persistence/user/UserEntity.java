@@ -45,15 +45,18 @@ public class UserEntity implements UserDetails {
 		return this.role;
 	}
 	public List<UserRole> getRoles() {
-		return (this.role == UserRole.ADMIN) ? List.of(UserRole.ADMIN, UserRole.USER) : List.of(UserRole.USER);
+		return (this.role == UserRole.ADMIN) ? 
+			List.of(UserRole.ADMIN, UserRole.USER) : List.of(UserRole.USER);
 	}
 	private List<String> getRolesAsString() {
-		return (this.role == UserRole.ADMIN) ? List.of("ROLE_ADMIN", "ROLE_USER") : List.of("ROLE_USER");
+		return (this.role == UserRole.ADMIN) ? 
+			List.of("ROLE_ADMIN", "ROLE_USER") : List.of("ROLE_USER");
 	}
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.getRolesAsString().stream().map(r -> new SimpleGrantedAuthority(r)).toList();
+		return this.getRolesAsString().stream()
+			.map(r -> new SimpleGrantedAuthority(r)).toList();
 	}
 
 	@Override

@@ -10,7 +10,10 @@ public class UserRepositoryImplMongoDB implements UserRepository {
     private final UserRepositoryMongoDB repositoryMongoDB;
     private final UserEntityMapper mapper;
 
-    public UserRepositoryImplMongoDB(UserRepositoryMongoDB mongoRepository, UserEntityMapper mapper) {
+    public UserRepositoryImplMongoDB(
+        UserRepositoryMongoDB mongoRepository, 
+        UserEntityMapper mapper
+    ) {
         this.repositoryMongoDB = mongoRepository;
         this.mapper = mapper;
     }

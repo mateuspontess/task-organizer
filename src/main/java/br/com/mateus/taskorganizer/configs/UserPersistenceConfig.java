@@ -20,7 +20,10 @@ public class UserPersistenceConfig {
     }
 
     @Bean
-    UserRepository getRepository(UserRepositoryMongoDB mongoRepository, UserEntityMapper entityMapper) {
+    UserRepository getRepository(
+        UserRepositoryMongoDB mongoRepository, 
+        UserEntityMapper entityMapper
+    ) {
         return new UserRepositoryImplMongoDB(mongoRepository, entityMapper);
     }
 

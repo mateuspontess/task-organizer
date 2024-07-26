@@ -22,7 +22,10 @@ public class TaskPersistenceConfig {
     }
 
     @Bean
-    TaskRepository getTaskRepository(TaskRepositoryMongoDB repository, TaskEntityMapper entityMapper) {
+    TaskRepository getTaskRepository(
+        TaskRepositoryMongoDB repository, 
+        TaskEntityMapper entityMapper
+    ) {
         return new TaskRepositoryImplMongoDB(repository, entityMapper);
     }
 
