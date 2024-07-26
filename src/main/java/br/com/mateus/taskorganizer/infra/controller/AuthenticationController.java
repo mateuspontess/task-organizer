@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
-	
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	@Autowired
@@ -50,7 +50,7 @@ public class AuthenticationController {
 	@PostMapping("/register")
 	public ResponseEntity<Void> register(@RequestBody @Valid AuthenticationDTO data) {
 		this.checkIfUserAlreadyExists(data.login());
-		
+
 		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
 		User newUser = new User(data.login(), encryptedPassword, UserRole.USER);
 		
@@ -71,9 +71,8 @@ public class AuthenticationController {
 		return ResponseEntity.ok().build();
 	}
 
-	private ResponseEntity<Void> checkIfUserAlreadyExists(String username) {
+	private void checkIfUserAlreadyExists(String username) {
 		if(this.existsByLogin.existsByLogin(username)) 
-			return ResponseEntity.badRequest().build();
-		return null;
+			throw new IllegalArgumentException("Login unavailable");
 	}
 }
