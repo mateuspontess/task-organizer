@@ -66,7 +66,7 @@ To run the application use the command:
 
 </details>
 
-### 📖 Documentation
+## 📖 Documentation
 
 The documentation can be accessed after deploying the application via the URL http://localhost:8080/swagger-ui/index.html#/ .
 
