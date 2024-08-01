@@ -17,29 +17,8 @@ This is a complete example of Clean Architecture implemented with Java, SpringBo
 
 ### 📋 Prerequisites
 
-- Java 17
-- MongoDB 7
-
-### 📦 Installing
-
-- Clone the project with the command (or download the zip from Github):
-
-      git clone https://github.com/mtpontes/task-organizer-api.git
-
-- Enter the main project directory and run:
-    * For Linux: 
-    
-          ./mvnw clean install -DskipTests
-
-
-    * For Windows:
-          
-          mvnw.cmd clean install -DskipTests
-
-
-    * If you already have Maven installed:
-    
-          mvn clean install -DskipTests
+- Docker
+- Docker Compose
 
 ### 🔎 Details
 
@@ -47,22 +26,33 @@ The application is configured to connect to MongoDB via port 27017.
 
 ### 🌍 Environment variables:
 
-#### Banco de dados
-- `DB_USERNAME`: Default value **root**
-- `DB_PASSWORD`: Default value **root**
+docker-compose.yml is configured to use default values.
+
+#### Database
+`DB_USERNAME`: Default value **root**
+
+`DB_PASSWORD`: Default value **root**
 
 #### Security
-- `JWT_SECRET`: secret used to generate a JWT token. Default value **secret**
+`JWT_SECRET`: secret used to generate a JWT token. Default value **secret**
 
 ##### These settings can also be changed in `application.properties`.
 
+### 📦 Installing
+
+Clone the project with the command (or download the zip from Github):
+
+      git clone https://github.com/mtpontes/task-organizer-api.git
+
+Build the application:
+
+      docker run --rm --workdir /app -v ${PWD}:/app maven:3.6.3-openjdk-17-slim mvn clean install -DskipTests
+
 ### 🌐 Deploy
 
-The packaged app can be found in the `/target` directory after following the installation procedure.
+Raise the containers:
 
-To run the application use the command:
-        
-    java -jar package_name.jar
+      docker-compose up --build
 
 </details>
 
