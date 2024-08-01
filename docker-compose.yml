@@ -1,0 +1,50 @@
+services:
+
+  task-organizer-mongo:
+    image: mongo:7.0-rc
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: task_organizer
+    volumes:
+      - ./mongo-data:/data/db
+    networks:
+      - docker-network
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: [
+        "CMD",
+        "mongosh",
+        "--quiet",
+        "127.0.0.1/test",
+        "--eval",
+        "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'",
+      ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  task-organizer-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: deploy-tasker
+    environment:
+      DB_HOST: task-organizer-mongo
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      JWT_SECRET: secret
+    networks:
+      - docker-network
+    ports:
+      - "8080:8080"
+    depends_on:
+      task-organizer-mongo:
+        condition: service_healthy
+
+networks:
+  docker-network:
+    driver: bridge
