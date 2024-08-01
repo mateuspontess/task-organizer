@@ -21,7 +21,7 @@ You can also import my set of requests into Postman. There you have all the endp
 
 ## 🚀 How to Run
 <details>
-<summary>Clique para expandir</summary>
+<summary>Click to expand</summary>
 
 ### 📋 Prerequisites
 
