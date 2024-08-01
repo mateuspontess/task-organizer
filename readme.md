@@ -11,6 +11,14 @@ This is a complete example of Clean Architecture implemented with Java, SpringBo
 - [Lombok](https://projectlombok.org/)
 - [Springdoc OpenAPI](https://springdoc.org/)
 
+## 📖 Documentation
+
+The documentation can be accessed after deploying the application via the URL http://localhost:8080/swagger-ui/index.html#/ .
+
+You can also import my set of requests into Postman. There you have all the endpoints with all the necessary URL parameters and body details to interact with the API.
+
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/31232249-ca8cfa3f-f3e7-4ab3-a595-dd7faca07dbe?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D31232249-ca8cfa3f-f3e7-4ab3-a595-dd7faca07dbe%26entityType%3Dcollection%26workspaceId%3Daae15406-ac2a-4087-8c9e-47072e8aa119)
+
 ## 🚀 How to Run
 <details>
 <summary>Clique para expandir</summary>
@@ -55,11 +63,3 @@ Raise the containers:
       docker-compose up --build
 
 </details>
-
-## 📖 Documentation
-
-The documentation can be accessed after deploying the application via the URL http://localhost:8080/swagger-ui/index.html#/ .
-
-You can also import my set of requests into Postman. There you have all the endpoints with all the necessary URL parameters and body details to interact with the API.
-
-[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/31232249-ca8cfa3f-f3e7-4ab3-a595-dd7faca07dbe?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D31232249-ca8cfa3f-f3e7-4ab3-a595-dd7faca07dbe%26entityType%3Dcollection%26workspaceId%3Daae15406-ac2a-4087-8c9e-47072e8aa119)
