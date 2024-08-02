@@ -20,8 +20,7 @@ You can also import my set of requests into Postman. There you have all the endp
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/31232249-ca8cfa3f-f3e7-4ab3-a595-dd7faca07dbe?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D31232249-ca8cfa3f-f3e7-4ab3-a595-dd7faca07dbe%26entityType%3Dcollection%26workspaceId%3Daae15406-ac2a-4087-8c9e-47072e8aa119)
 
 ## 🚀 How to Run
-<details>
-<summary>Click to expand</summary>
+<details><summary>Click to expand</summary>
 
 ### 📋 Prerequisites
 
@@ -51,10 +50,6 @@ docker-compose.yml is configured to use default values.
 Clone the project with the command (or download the zip from Github):
 
       git clone https://github.com/mtpontes/task-organizer-api.git
-
-Build the application:
-
-      docker run --rm --workdir /app -v ${PWD}:/app maven:3.6.3-openjdk-17-slim mvn clean install -DskipTests
 
 ### 🌐 Deploy
 
