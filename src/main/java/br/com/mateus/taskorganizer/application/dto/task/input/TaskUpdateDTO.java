@@ -9,5 +9,4 @@ public record TaskUpdateDTO(
 	String title,
 	String description,
 	LocalDate dueDate,
-	StatusTask status
-) {}
+	StatusTask status) {}

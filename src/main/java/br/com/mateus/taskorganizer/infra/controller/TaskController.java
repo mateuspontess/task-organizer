@@ -81,10 +81,7 @@ public class TaskController {
 	}
 	
 	@GetMapping("/{taskId}")
-	public ResponseEntity<TaskResponseDTO> showTask(
-		@PathVariable String taskId,
-		Authentication auth
-	) {
+	public ResponseEntity<TaskResponseDTO> showTask(@PathVariable String taskId,Authentication auth) {
 		UserEntity currentUser = (UserEntity) auth.getPrincipal();
 		return ResponseEntity.ok(
 			new TaskResponseDTO(
@@ -111,10 +108,7 @@ public class TaskController {
 	
 	@Transactional
 	@DeleteMapping("/{taskId}")
-	public ResponseEntity<TaskResponseDTO> removeTask(
-		@PathVariable String taskId,
-		Authentication auth
-	) {
+	public ResponseEntity<TaskResponseDTO> removeTask(@PathVariable String taskId,Authentication auth) {
 		UserEntity currentUser = (UserEntity) auth.getPrincipal();
 		removeTaskByIdAndUserId.deleteTaskByIdAndUserId(
 			taskId, 

@@ -30,12 +30,7 @@ public class TaskEntity {
 	private String userId;
 
 	
-	public TaskEntity(
-		String title, 
-		String description, 
-		LocalDate dueDate, 
-		String userId
-	) {
+	public TaskEntity(String title, String description, LocalDate dueDate, String userId) {
         this.title = title;
         this.dueDate = dueDate;
 		this.title = title;

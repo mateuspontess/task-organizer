@@ -9,8 +9,7 @@ public record TaskResponseDTO(
 		String title,
 		String description,
 		LocalDate dueDate,
-		StatusTask status
-	) {
+		StatusTask status) {
 	
 	public TaskResponseDTO(Task t) {
 		this(

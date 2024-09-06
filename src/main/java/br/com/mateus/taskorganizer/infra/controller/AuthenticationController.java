@@ -40,12 +40,8 @@ public class AuthenticationController {
 	
 	
 	@PostMapping("/login")
-	public ResponseEntity<AuthenticationResponseDTO> login(
-		@RequestBody @Valid AuthenticationDTO data
-	) {
-		var usernamePassword = new UsernamePasswordAuthenticationToken(
-			data.login(), data.password()
-		);
+	public ResponseEntity<AuthenticationResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
+		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
 		Authentication auth = 
 			this.authenticationManager.authenticate(usernamePassword);
 
@@ -55,9 +51,7 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<Void> register(
-		@RequestBody @Valid AuthenticationDTO data
-	) {
+	public ResponseEntity<Void> register(@RequestBody @Valid AuthenticationDTO data) {
 		this.checkIfUserAlreadyExists(data.login());
 
 		String encryptedPassword = encoder.encode(data.password());
@@ -69,9 +63,7 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/admin/register")
-	public ResponseEntity<Void> adminRegister(
-		@RequestBody @Valid AuthenticationDTO data
-	) {
+	public ResponseEntity<Void> adminRegister(@RequestBody @Valid AuthenticationDTO data) {
 		this.checkIfUserAlreadyExists(data.login());
 		
 		String encryptedPassword = encoder.encode(data.password());

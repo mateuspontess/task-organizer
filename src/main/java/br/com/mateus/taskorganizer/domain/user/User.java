@@ -19,13 +19,7 @@ public class User {
 		this.role = role;
 	}
 
-    public User(
-		String id, 
-		String login, 
-		String password, 
-		UserRole role, 
-		List<String> taskIds
-	) {
+    public User(String id, String login, String password, UserRole role, List<String> taskIds) {
         this.id = id;
         this.login = login;
         this.password = password;

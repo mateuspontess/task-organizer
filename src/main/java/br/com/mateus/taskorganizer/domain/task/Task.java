@@ -14,14 +14,7 @@ public class Task {
 
 	public Task() {}
 
-	public Task(
-		String id, 
-		String title, 
-		String description, 
-		LocalDate dueDate, 
-		StatusTask status, 
-		String userId
-	) {
+	public Task(String id, String title, String description, LocalDate dueDate, StatusTask status, String userId) {
 		this.cannotBeNull(id, "id");
 		this.cannotBeBlank(title, "title");
 		this.cannotBeInThePast(dueDate);
@@ -36,12 +29,7 @@ public class Task {
         this.userId = userId;
     }
 	
-	public Task(
-		String title, 
-		String description, 
-		LocalDate dueDate, 
-		String userId
-	) {
+	public Task(String title, String description, LocalDate dueDate, String userId) {
 		this.cannotBeBlank(title, "title");
 		this.cannotBeInThePast(dueDate);
 		this.cannotBeNull(userId, "userId");

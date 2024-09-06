@@ -8,5 +8,4 @@ public record AuthenticationDTO(
     String login, 
     
     @NotBlank
-    String password
-) {}
+    String password) {}

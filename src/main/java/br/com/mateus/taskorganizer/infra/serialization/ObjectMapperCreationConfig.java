@@ -22,7 +22,7 @@ public class ObjectMapperCreationConfig {
             module.addDeserializer(StatusTask.class, new StatusTaskDeserializer());
             builder.modules(module);
 
-            // Configura para aceitar valores vazios como nulo apenas para o enum StatusTask
+            // Configure to accept empty values ​​like null only for the StatusTask enum
             builder.featuresToEnable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
             builder.modules(new JavaTimeModule());
             builder.deserializerByType(StatusTask.class, new StatusTaskDeserializer());
