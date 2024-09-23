@@ -19,8 +19,9 @@ You can also import my set of requests into Postman. There you have all the endp
 
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/31232249-ca8cfa3f-f3e7-4ab3-a595-dd7faca07dbe?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D31232249-ca8cfa3f-f3e7-4ab3-a595-dd7faca07dbe%26entityType%3Dcollection%26workspaceId%3Daae15406-ac2a-4087-8c9e-47072e8aa119)
 
-## 🚀 How to Run
-<details><summary>Click to expand</summary>
+
+<details>
+  <summary><h2>🚀 How to Run</h2></summary>
 
 ### 📋 Prerequisites
 
