@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,9 +52,8 @@ public class TaskController {
 	public ResponseEntity<TaskResponseDTO> registerTask(
 		@RequestBody @Valid TaskCreateDTO dto, 
 		UriComponentsBuilder uriBuilder,
-		Authentication auth
+		@AuthenticationPrincipal UserEntity currentUser
 	) {
-		UserEntity currentUser = (UserEntity) auth.getPrincipal();
 		Task task = new Task(
 			dto.title(), 
 			dto.description(), 
@@ -70,9 +70,7 @@ public class TaskController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<TaskResponseDTO>> listTasks(Authentication auth) {
-		UserEntity currentUser = (UserEntity) auth.getPrincipal();
-
+	public ResponseEntity<List<TaskResponseDTO>> listTasks(@AuthenticationPrincipal UserEntity currentUser) {
 		return ResponseEntity.ok(
 			readAllTasksByUserId.getAllTasksByUserId(currentUser.getId())
 				.stream()
@@ -81,16 +79,12 @@ public class TaskController {
 	}
 	
 	@GetMapping("/{taskId}")
-	public ResponseEntity<TaskResponseDTO> showTask(@PathVariable String taskId,Authentication auth) {
-		UserEntity currentUser = (UserEntity) auth.getPrincipal();
+	public ResponseEntity<TaskResponseDTO> showTask(
+		@PathVariable String taskId, 
+		@AuthenticationPrincipal UserEntity currentUser
+	) {
 		return ResponseEntity.ok(
-			new TaskResponseDTO(
-				readTaskByIdAndUserId.getTaskByIdAndUserId(
-					taskId, 
-					currentUser.getId()
-				)
-			)
-		);
+			new TaskResponseDTO(readTaskByIdAndUserId.getTaskByIdAndUserId(taskId, currentUser.getId())));
 	}
 	
 	@Transactional
@@ -108,12 +102,11 @@ public class TaskController {
 	
 	@Transactional
 	@DeleteMapping("/{taskId}")
-	public ResponseEntity<TaskResponseDTO> removeTask(@PathVariable String taskId,Authentication auth) {
-		UserEntity currentUser = (UserEntity) auth.getPrincipal();
-		removeTaskByIdAndUserId.deleteTaskByIdAndUserId(
-			taskId, 
-			currentUser.getId()
-		);
+	public ResponseEntity<TaskResponseDTO> removeTask(
+		@PathVariable String taskId,
+		@AuthenticationPrincipal UserEntity currentUser
+	) {
+		removeTaskByIdAndUserId.deleteTaskByIdAndUserId(taskId, currentUser.getId());
 		return ResponseEntity.noContent().build();
 	}
 }
