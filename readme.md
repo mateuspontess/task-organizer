@@ -1,7 +1,5 @@
 # Task Organizer API
 
-## 🖥️ About the project
-
 This is a complete example of Clean Architecture implemented with Java, SpringBoot and MongoDB, in a simple CRUD application, with high coverage of unit and integration tests, using Junit 5 and TestContainers.
 
 ## 🛠️ Tecnologies 
